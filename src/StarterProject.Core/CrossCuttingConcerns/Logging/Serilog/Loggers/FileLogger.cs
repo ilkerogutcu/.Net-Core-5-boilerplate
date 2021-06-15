@@ -15,17 +15,17 @@ namespace StarterProject.Core.CrossCuttingConcerns.Logging.Serilog.Loggers
             var configuration = ServiceTool.ServiceProvider.GetService<IConfiguration>();
 
             var logConfig =
-                configuration.GetSection("SeriLogConfigurations:FileLogConfiguration") as FileLogConfiguration
+                configuration?.GetSection("SeriLogConfigurations:FileLogConfiguration") as FileLogConfiguration
                 ?? throw new Exception(SerilogMessages.NullOptionsMessage);
 
-            var logFilePath = $"{logConfig.FolderPath}/.log";
+            var logFilePath = $"{logConfig.FolderPath}/{DateTime.Now:yyyy-MM-dd}.txt";
 
             Logger = new LoggerConfiguration()
                 .WriteTo.File(logFilePath,
-                    rollingInterval: RollingInterval.Day,
-                    retainedFileCountLimit: null,
+                    retainedFileCountLimit: 1,
                     fileSizeLimitBytes: 5000000,
                     outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}")
+                .WriteTo.Seq(logConfig.SeqConnectionString)
                 .CreateLogger();
         }
     }
