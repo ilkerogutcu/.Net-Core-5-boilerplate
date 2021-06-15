@@ -17,7 +17,8 @@ namespace StarterProject.Core.CrossCuttingConcerns.Logging.Serilog.Loggers
             var configuration = ServiceTool.ServiceProvider.GetService<IConfiguration>();
 
             var logConfig =
-                configuration?.GetSection("SeriLogConfigurations:ElasticsearchConfiguration") as ElasticSearchConfiguration
+                configuration?.GetSection("SeriLogConfigurations:ElasticsearchConfiguration") as
+                    ElasticSearchConfiguration
                 ?? throw new Exception(SerilogMessages.NullOptionsMessage);
             Logger = new LoggerConfiguration()
                 .WriteTo.Elasticsearch(

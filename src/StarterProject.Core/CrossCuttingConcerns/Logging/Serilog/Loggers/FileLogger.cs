@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -18,8 +19,7 @@ namespace StarterProject.Core.CrossCuttingConcerns.Logging.Serilog.Loggers
                 configuration?.GetSection("SeriLogConfigurations:FileLogConfiguration") as FileLogConfiguration
                 ?? throw new Exception(SerilogMessages.NullOptionsMessage);
 
-            var logFilePath = $"{logConfig.FolderPath}/{DateTime.Now:yyyy-MM-dd}.txt";
-
+            var logFilePath = $"{Directory.GetCurrentDirectory() + logConfig.FolderPath}/{DateTime.Now:yyyy-MM-dd}.txt";
             Logger = new LoggerConfiguration()
                 .WriteTo.File(logFilePath,
                     retainedFileCountLimit: 1,
