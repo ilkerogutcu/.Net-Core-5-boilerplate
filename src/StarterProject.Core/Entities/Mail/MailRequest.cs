@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 
-namespace StarterProject.Entities.DTOs.Mail
+namespace StarterProject.Core.Entities.Mail
 {
     public class MailRequest
     {
