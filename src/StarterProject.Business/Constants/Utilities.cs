@@ -8,7 +8,9 @@ namespace StarterProject.Business.Constants
         public static IEnumerable<DateTime> GetDateRange(DateTime startDate, DateTime endDate)
         {
             if (endDate < startDate)
+            {
                 throw new ArgumentException(Messages.GetDateRangeError);
+            }
 
             while (startDate <= endDate)
             {
@@ -18,4 +20,3 @@ namespace StarterProject.Business.Constants
         }
     }
 }
-
