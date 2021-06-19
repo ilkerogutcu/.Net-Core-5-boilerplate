@@ -59,6 +59,7 @@ namespace StarterProject.WebAPI
             {
                 options.User.RequireUniqueEmail = true;
                 options.Password.RequiredLength = 8;
+                options.SignIn.RequireConfirmedEmail = true;
             });
             
             services.AddAuthentication(options =>
