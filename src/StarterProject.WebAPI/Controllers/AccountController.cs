@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StarterProject.Business.Features.Authentication.Commands;
-using Microsoft.Extensions.DependencyInjection;
+
 namespace StarterProject.WebAPI.Controllers
 {
     [Route("api/[controller]")]
@@ -18,6 +18,13 @@ namespace StarterProject.WebAPI.Controllers
 
         [HttpPost("sign-up/user")]
         public async Task<IActionResult> SignUpUser(SignUpUserCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpGet("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail([FromQuery] ConfirmEmailCommand command)
         {
             var result = await _mediator.Send(command);
             return result.Success ? Ok(result) : BadRequest(result);
