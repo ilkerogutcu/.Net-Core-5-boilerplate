@@ -15,9 +15,8 @@ namespace StarterProject.Core.CrossCuttingConcerns.Logging.Serilog.Loggers
         {
             var configuration = ServiceTool.ServiceProvider.GetService<IConfiguration>();
 
-            var logConfig =
-                configuration?.GetSection("SeriLogConfigurations:FileLogConfiguration") as FileLogConfiguration
-                ?? throw new Exception(SerilogMessages.NullOptionsMessage);
+            var logConfig = configuration.GetSection("SeriLogConfigurations:FileLogConfiguration")
+                .Get<FileLogConfiguration>() ?? throw new Exception(SerilogMessages.NullOptionsMessage);
 
             var logFilePath = $"{Directory.GetCurrentDirectory() + logConfig.FolderPath}/{DateTime.Now:yyyy-MM-dd}.txt";
             Logger = new LoggerConfiguration()

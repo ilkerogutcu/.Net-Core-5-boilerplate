@@ -7,10 +7,22 @@
     <ItemGroup>
       <PackageReference Include="Autofac" Version="6.2.0" />
       <PackageReference Include="Autofac.Extras.DynamicProxy" Version="6.0.0" />
+      <PackageReference Include="MediatR" Version="9.0.0" />
+      <PackageReference Include="MediatR.Extensions.Autofac.DependencyInjection" Version="7.2.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+      <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="5.0.7" />
+      <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="5.0.7" />
+
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\StarterProject.Core\StarterProject.Core.csproj" />
+      <ProjectReference Include="..\StarterProject.DataAccess\StarterProject.DataAccess.csproj" />
+      <ProjectReference Include="..\StarterProject.Entities\StarterProject.Entities.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Features\Authentication\Queries" />
     </ItemGroup>
 
 </Project>

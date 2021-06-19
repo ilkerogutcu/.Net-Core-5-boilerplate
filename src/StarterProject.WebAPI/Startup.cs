@@ -1,3 +1,6 @@
+using System;
+using System.Reflection;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,12 +11,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using StarterProject.Business.DependencyResolvers;
+using StarterProject.Business.Features.Authentication.Handlers;
+using StarterProject.Core.CrossCuttingConcerns.Logging.Serilog.ConfigurationModels;
 using StarterProject.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using StarterProject.Core.DependencyResolvers;
+using StarterProject.Core.Extensions;
 using StarterProject.Core.Settings;
 using StarterProject.Core.Utilities.Encryption;
 using StarterProject.Core.Utilities.IoC;
 using StarterProject.DataAccess.Concrete.EntityFramework.Contexts;
 using StarterProject.Entities.Concrete;
+
 
 namespace StarterProject.WebAPI
 {
@@ -34,13 +43,17 @@ namespace StarterProject.WebAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "StarterProject.WebAPI", Version = "v1"});
             });
+            services.AddDependencyResolvers(new ICoreModule[]
+            {
+                new CoreModule()
+            });
             services.AddTransient<FileLogger>();
             services.AddTransient<MongoDbLogger>();
             services.AddTransient<ElasticsearchLogger>();
-
+            services.AddDbContext<IdentityContext>();
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<IdentityContext>()
-                .AddDefaultTokenProviders();
-            services.AddDbContext<IdentityDbContext>();
+                .AddDefaultTokenProviders(); 
+            services.Configure<FileLogConfiguration>(Configuration.GetSection("SeriLogConfigurations:FileLogConfiguration"));
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.Configure<IdentityOptions>(options =>
             {

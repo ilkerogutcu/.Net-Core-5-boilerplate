@@ -1,8 +1,10 @@
-﻿using StarterProject.Core.Entities;
+﻿using MediatR;
+using StarterProject.Core.Utilities.Results;
+using StarterProject.Entities.DTOs.Authentication.Responses;
 
-namespace StarterProject.Entities.DTOs.Authentication.Requests
+namespace StarterProject.Business.Features.Authentication.Commands
 {
-    public class SignUpRegister:IDto
+    public class SignUpUserCommand : IRequest<IDataResult<SignUpResponse>>
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
