@@ -43,21 +43,21 @@ namespace StarterProject.Business.Features.Authentication.Handlers
 
         [ValidationAspect(typeof(SignUpValidator))]
         [LogAspect(typeof(FileLogger))]
-        public async Task<IDataResult<SignUpResponse>> Handle(SignUpUserCommand command,
+        public async Task<IDataResult<SignUpResponse>> Handle(SignUpUserCommand request,
             CancellationToken cancellationToken)
         {
-            var isUserAlreadyExist = await _userManager.FindByNameAsync(command.Username);
+            var isUserAlreadyExist = await _userManager.FindByNameAsync(request.Username);
             if (isUserAlreadyExist != null) return new ErrorDataResult<SignUpResponse>(Messages.UsernameAlreadyExist);
-            var isEmailAlreadyExist = await _userManager.FindByEmailAsync(command.Username);
+            var isEmailAlreadyExist = await _userManager.FindByEmailAsync(request.Username);
             if (isEmailAlreadyExist != null) return new ErrorDataResult<SignUpResponse>(Messages.EmailAlreadyExist);
             var user = new ApplicationUser
             {
-                UserName = command.Username,
-                Email = command.Email,
-                FirstName = command.FirstName,
-                LastName = command.LastName
+                UserName = request.Username,
+                Email = request.Email,
+                FirstName = request.FirstName,
+                LastName = request.LastName
             };
-            var result = await _userManager.CreateAsync(user, command.Password);
+            var result = await _userManager.CreateAsync(user, request.Password);
             if (!result.Succeeded)
             {
                 return new ErrorDataResult<SignUpResponse>(Messages.SignUpFailed +
@@ -73,17 +73,17 @@ namespace StarterProject.Business.Features.Authentication.Handlers
             var verificationUri = await SendVerificationEmail(user);
             return new SuccessDataResult<SignUpResponse>(new SignUpResponse
             {
-                Email = command.Email,
-                Username = command.Username
+                Email = request.Email,
+                Username = request.Username
             }, Messages.SignUpSuccessfully + verificationUri);
         }
 
         private async Task<string> SendVerificationEmail(ApplicationUser user)
         {
-            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+            var verificationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            verificationToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(verificationToken));
             var endPointUrl = new Uri(string.Concat($"{_config.GetSection("BaseUrl").Value}", "api/account/confirm-email/"));
-            var verificationUrl = QueryHelpers.AddQueryString(endPointUrl.ToString(), "token", token);
+            var verificationUrl = QueryHelpers.AddQueryString(endPointUrl.ToString(), "userId", user.Id);
             var filePath =Path.Combine(Environment.CurrentDirectory, @"MailTemplates\SendVerificationEmailTemplate.html");
             using (var reader = new StreamReader(filePath))
             {
@@ -96,7 +96,7 @@ namespace StarterProject.Business.Features.Authentication.Handlers
                     Body = mailTemplate.Replace("[verificationUrl]", verificationUrl)
                 });
             }
-            return QueryHelpers.AddQueryString(verificationUrl, "token", token);
+            return QueryHelpers.AddQueryString(verificationUrl, "verificationToken", verificationToken);
         }
     }
 }
