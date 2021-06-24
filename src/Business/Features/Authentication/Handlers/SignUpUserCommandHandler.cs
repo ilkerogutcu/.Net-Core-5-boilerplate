@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -21,6 +23,8 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
+
+#endregion
 
 namespace Business.Features.Authentication.Handlers
 {
@@ -47,9 +51,15 @@ namespace Business.Features.Authentication.Handlers
             CancellationToken cancellationToken)
         {
             var isUserAlreadyExist = await _userManager.FindByNameAsync(request.Username);
-            if (isUserAlreadyExist != null) return new ErrorDataResult<SignUpResponse>(Messages.UsernameAlreadyExist);
+            if (isUserAlreadyExist != null)
+            {
+                return new ErrorDataResult<SignUpResponse>(Messages.UsernameAlreadyExist);
+            }
             var isEmailAlreadyExist = await _userManager.FindByEmailAsync(request.Username);
-            if (isEmailAlreadyExist != null) return new ErrorDataResult<SignUpResponse>(Messages.EmailAlreadyExist);
+            if (isEmailAlreadyExist != null)
+            {
+                return new ErrorDataResult<SignUpResponse>(Messages.EmailAlreadyExist);
+            }
             var user = new ApplicationUser
             {
                 UserName = request.Username,
