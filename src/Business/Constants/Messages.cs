@@ -14,7 +14,7 @@
         public const string PleaseEnterTheFirstName = "Please enter the first name!";
         public const string PleaseEnterTheLastName = "Please enter the last name!";
         public const string SignUpFailed = "Sign up failed!";
-
+        public const string EmailIsNotConfirmed = "Email is not confirmed!";
         public const string SignUpSuccessfully =
             "Sign up successfully. Please confirm your account by visiting this URL: ";
 

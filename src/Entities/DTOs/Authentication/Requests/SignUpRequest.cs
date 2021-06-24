@@ -2,7 +2,7 @@
 
 namespace Entities.DTOs.Authentication.Requests
 {
-    public class SignUpRegister:IDto
+    public class SignUpRequest:IDto
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
