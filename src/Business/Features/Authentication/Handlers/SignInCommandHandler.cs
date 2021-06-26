@@ -55,7 +55,7 @@ namespace Business.Features.Authentication.Handlers
                 Username = user.UserName,
                 IsVerified = user.EmailConfirmed,
                 JwtToken = new JwtSecurityTokenHandler().WriteToken(token)
-            });
+            },Messages.SignInSuccessfully);
         }
 
         private async Task<JwtSecurityToken> GenerateJwtToken(ApplicationUser user)
