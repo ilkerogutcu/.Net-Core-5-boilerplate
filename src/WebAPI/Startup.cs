@@ -1,3 +1,4 @@
+using Business.Helpers;
 using Core.CrossCuttingConcerns.Logging.Serilog.ConfigurationModels;
 using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using Core.DependencyResolvers;
@@ -40,6 +41,7 @@ namespace WebAPI
             {
                 new CoreModule()
             });
+            services.AddAutoMapper(typeof(AutoMapperHelper));
             services.AddTransient<FileLogger>();
             services.AddTransient<MongoDbLogger>();
             services.AddTransient<ElasticsearchLogger>();
