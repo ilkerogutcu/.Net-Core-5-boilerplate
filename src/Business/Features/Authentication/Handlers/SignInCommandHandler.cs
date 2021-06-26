@@ -1,6 +1,4 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -19,8 +17,6 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-
-#endregion
 
 namespace Business.Features.Authentication.Handlers
 {
@@ -43,20 +39,13 @@ namespace Business.Features.Authentication.Handlers
             CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByNameAsync(request.UserName);
-            if (user == null)
-            {
-                return new ErrorDataResult<SignInResponse>(Messages.UserNotFound);
-            }
-            if (!user.EmailConfirmed)
-            {
-                return new ErrorDataResult<SignInResponse>(Messages.EmailIsNotConfirmed);
-            }
+            if (user == null) return new ErrorDataResult<SignInResponse>(Messages.UserNotFound);
+            if (!user.EmailConfirmed) return new ErrorDataResult<SignInResponse>(Messages.EmailIsNotConfirmed);
+
             var result = await _signInManager.PasswordSignInAsync(user.UserName, request.Password,
                 false, false);
-            if (!result.Succeeded)
-            {
-                return new ErrorDataResult<SignInResponse>(Messages.SignInFailed);
-            }
+            if (!result.Succeeded) return new ErrorDataResult<SignInResponse>(Messages.SignInFailed);
+
             var token = await GenerateJwtToken(user);
             var userRoles = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
             return new SuccessDataResult<SignInResponse>(new SignInResponse
@@ -88,7 +77,8 @@ namespace Business.Features.Authentication.Handlers
                 .Union(roleClaims);
             var symmetricSecurityKey =
                 new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["TokenOptions:SecurityKey"]));
-            var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha512Signature);
+            var signingCredentials =
+                new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha512Signature);
             return new JwtSecurityToken(
                 _configuration["TokenOptions:Issuer"],
                 _configuration["TokenOptions:Audience"],

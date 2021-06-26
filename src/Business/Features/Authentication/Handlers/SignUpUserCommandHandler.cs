@@ -94,8 +94,8 @@ namespace Business.Features.Authentication.Handlers
             verificationToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(verificationToken));
             var endPointUrl = new Uri(string.Concat($"{_config.GetSection("BaseUrl").Value}", "api/account/confirm-email/"));
             var verificationUrl = QueryHelpers.AddQueryString(endPointUrl.ToString(), "userId", user.Id);
-            var filePath =Path.Combine(Environment.CurrentDirectory, @"MailTemplates\SendVerificationEmailTemplate.html");
-            using (var reader = new StreamReader(filePath))
+            var emailTemplatePath =Path.Combine(Environment.CurrentDirectory, @"MailTemplates\SendVerificationEmailTemplate.html");
+            using (var reader = new StreamReader(emailTemplatePath))
             {
                 var mailTemplate = await reader.ReadToEndAsync();
                 reader.Close();
