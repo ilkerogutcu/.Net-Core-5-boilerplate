@@ -38,7 +38,7 @@ namespace Business.Features.Authentication.Handlers
         public async Task<IDataResult<SignInResponse>> Handle(SignInCommand request,
             CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByNameAsync(request.UserName);
+            var user = await _userManager.FindByNameAsync(request.Username);
             if (user == null) return new ErrorDataResult<SignInResponse>(Messages.UserNotFound);
             if (!user.EmailConfirmed) return new ErrorDataResult<SignInResponse>(Messages.EmailIsNotConfirmed);
 

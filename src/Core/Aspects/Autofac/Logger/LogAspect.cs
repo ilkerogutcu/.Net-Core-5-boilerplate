@@ -27,11 +27,11 @@ namespace Core.Aspects.Autofac.Logger
             _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
         }
 
-        protected override void OnBefore(IInvocation invocation)
-        {
-            var result = GetLogDetail(invocation);
-            _loggerServiceBase.Info($"OnBefore: {result}");
-        }
+        // protected override void OnBefore(IInvocation invocation)
+        // {
+        //     var result = GetLogDetail(invocation);
+        //     _loggerServiceBase.Info($"OnBefore: {result}");
+        // }
 
         protected override void OnException(IInvocation invocation, Exception e)
         {
@@ -40,12 +40,12 @@ namespace Core.Aspects.Autofac.Logger
                 $"OnException {result}");
         }
 
-        protected override void OnSuccess(IInvocation invocation)
-        {
-            var result = GetLogDetail(invocation);
-            _loggerServiceBase.Info(
-                $"OnSuccess Method Name: {result}");
-        }
+        // protected override void OnSuccess(IInvocation invocation)
+        // {
+        //     var result = GetLogDetail(invocation);
+        //     _loggerServiceBase.Info(
+        //         $"OnSuccess Method Name: {result}");
+        // }
 
         // protected override void OnAfter(IInvocation invocation)
         //  {
