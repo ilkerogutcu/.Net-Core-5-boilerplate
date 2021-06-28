@@ -18,7 +18,7 @@ namespace Core.DataAccess.EntityFramework
             Context = context;
         }
 
-        protected TContext Context { get; }
+        private TContext Context { get; }
 
         public TEntity Add(TEntity entity)
         {
@@ -101,19 +101,17 @@ namespace Core.DataAccess.EntityFramework
                 }
                 else
                 {
-                    using (var tx = Context.Database.BeginTransaction())
+                    using var tx = Context.Database.BeginTransaction();
+                    try
                     {
-                        try
-                        {
-                            result = action();
-                            SaveChanges();
-                            tx.Commit();
-                        }
-                        catch (Exception)
-                        {
-                            tx.Rollback();
-                            throw;
-                        }
+                        result = action();
+                        SaveChanges();
+                        tx.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        tx.Rollback();
+                        throw;
                     }
                 }
 

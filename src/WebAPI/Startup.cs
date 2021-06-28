@@ -1,6 +1,7 @@
 using Business.Helpers;
 using Core.CrossCuttingConcerns.Logging.Serilog.ConfigurationModels;
 using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using Core.DataAccess.MongoDb.Configuration;
 using Core.DependencyResolvers;
 using Core.Extensions;
 using Core.Settings;
@@ -15,8 +16,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MongoDbConfiguration = Core.DataAccess.MongoDb.Configuration.MongoDbConfiguration;
 
 namespace WebAPI
 {
@@ -41,14 +44,20 @@ namespace WebAPI
             {
                 new CoreModule()
             });
+            services.Configure<MongoDbConfiguration>(
+                Configuration.GetSection(nameof(MongoDbConfiguration)));
+            services.AddSingleton<IMongoDbConfiguration>(sp =>
+                sp.GetRequiredService<IOptions<MongoDbConfiguration>>().Value);
+
             services.AddAutoMapper(typeof(AutoMapperHelper));
             services.AddTransient<FileLogger>();
             services.AddTransient<MongoDbLogger>();
             services.AddTransient<ElasticsearchLogger>();
             services.AddDbContext<IdentityContext>();
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<IdentityContext>()
-                .AddDefaultTokenProviders(); 
-            services.Configure<FileLogConfiguration>(Configuration.GetSection("SeriLogConfigurations:FileLogConfiguration"));
+                .AddDefaultTokenProviders();
+            services.Configure<FileLogConfiguration>(
+                Configuration.GetSection("SeriLogConfigurations:FileLogConfiguration"));
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.Configure<IdentityOptions>(options =>
             {
@@ -56,7 +65,7 @@ namespace WebAPI
                 options.Password.RequiredLength = 8;
                 options.SignIn.RequireConfirmedEmail = true;
             });
-            
+
             services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
