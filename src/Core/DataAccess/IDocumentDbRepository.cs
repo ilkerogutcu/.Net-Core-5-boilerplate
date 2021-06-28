@@ -8,7 +8,7 @@ using MongoDB.Bson;
 
 namespace Core.DataAccess
 {
-    public interface IDocumentDbRepository<T> where T:DocumentEntity
+    public interface IDocumentDbRepository<T> where T : DocumentEntity
     {
         void Add(T entity);
         void AddMany(IEnumerable<T> entities);

@@ -3,7 +3,7 @@ using MongoDB.Bson;
 
 namespace Core.Entities.MongoDb
 {
-    public abstract class DocumentEntity:IDocument
+    public abstract class DocumentEntity : IDocument
     {
         public ObjectId Id { get; set; }
         public DateTime CreatedAt => Id.CreationTime;

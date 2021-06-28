@@ -9,8 +9,9 @@ namespace Core.Entities.MongoDb
         [BsonId]
         [BsonRepresentation(BsonType.String)]
         ObjectId Id { get; set; }
+
         DateTime CreatedAt { get; }
-        DateTime UpdatedAt { get; set;}
-        DateTime CreatedBy { get; set;}
+        DateTime UpdatedAt { get; set; }
+        DateTime CreatedBy { get; set; }
     }
 }

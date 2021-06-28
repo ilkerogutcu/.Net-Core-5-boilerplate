@@ -48,15 +48,16 @@ namespace WebAPI
                 Configuration.GetSection(nameof(MongoDbConfiguration)));
             services.AddSingleton<IMongoDbConfiguration>(sp =>
                 sp.GetRequiredService<IOptions<MongoDbConfiguration>>().Value);
-            
+
             services.AddAutoMapper(typeof(AutoMapperHelper));
             services.AddTransient<FileLogger>();
             services.AddTransient<MongoDbLogger>();
             services.AddTransient<ElasticsearchLogger>();
             services.AddDbContext<IdentityContext>();
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<IdentityContext>()
-                .AddDefaultTokenProviders(); 
-            services.Configure<FileLogConfiguration>(Configuration.GetSection("SeriLogConfigurations:FileLogConfiguration"));
+                .AddDefaultTokenProviders();
+            services.Configure<FileLogConfiguration>(
+                Configuration.GetSection("SeriLogConfigurations:FileLogConfiguration"));
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.Configure<IdentityOptions>(options =>
             {
@@ -64,7 +65,7 @@ namespace WebAPI
                 options.Password.RequiredLength = 8;
                 options.SignIn.RequireConfirmedEmail = true;
             });
-            
+
             services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
