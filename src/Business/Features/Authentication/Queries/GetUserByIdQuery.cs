@@ -4,8 +4,8 @@ using MediatR;
 
 namespace Business.Features.Authentication.Queries
 {
-    public class GetUserByUsernameQuery : IRequest<IDataResult<UserResponse>>
+    public class GetUserByIdQuery:IRequest<IDataResult<UserResponse>>
     {
-        public string Username { get; set; }
+        public string Id { get; set; }
     }
 }

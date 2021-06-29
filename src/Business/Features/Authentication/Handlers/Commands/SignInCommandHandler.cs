@@ -38,7 +38,7 @@ namespace Business.Features.Authentication.Handlers.Commands
         public async Task<IDataResult<SignInResponse>> Handle(SignInCommand request,
             CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByNameAsync(request.Username);
+            var user = await _userManager.FindByNameAsync(request.UserName);
             if (user is null) return new ErrorDataResult<SignInResponse>(Messages.UserNotFound);
             if (!user.EmailConfirmed) return new ErrorDataResult<SignInResponse>(Messages.EmailIsNotConfirmed);
 
@@ -50,9 +50,10 @@ namespace Business.Features.Authentication.Handlers.Commands
             var userRoles = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
             return new SuccessDataResult<SignInResponse>(new SignInResponse
             {
+                Id = user.Id,
                 Email = user.Email,
                 Roles = userRoles.ToList(),
-                Username = user.UserName,
+                UserName = user.UserName,
                 IsVerified = user.EmailConfirmed,
                 JwtToken = new JwtSecurityTokenHandler().WriteToken(token)
             }, Messages.SignInSuccessfully);

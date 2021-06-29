@@ -46,16 +46,16 @@ namespace Business.Features.Authentication.Handlers.Commands
         public async Task<IDataResult<SignUpResponse>> Handle(SignUpUserCommand request,
             CancellationToken cancellationToken)
         {
-            var isUserAlreadyExist = await _userManager.FindByNameAsync(request.Username);
+            var isUserAlreadyExist = await _userManager.FindByNameAsync(request.UserName);
             if (isUserAlreadyExist is not null)
                 return new ErrorDataResult<SignUpResponse>(Messages.UsernameAlreadyExist);
 
-            var isEmailAlreadyExist = await _userManager.FindByEmailAsync(request.Username);
+            var isEmailAlreadyExist = await _userManager.FindByEmailAsync(request.UserName);
             if (isEmailAlreadyExist is not null) return new ErrorDataResult<SignUpResponse>(Messages.EmailAlreadyExist);
 
             var user = new ApplicationUser
             {
-                UserName = request.Username,
+                UserName = request.UserName,
                 Email = request.Email,
                 FirstName = request.FirstName,
                 LastName = request.LastName
@@ -72,8 +72,9 @@ namespace Business.Features.Authentication.Handlers.Commands
             var verificationUri = await SendVerificationEmail(user);
             return new SuccessDataResult<SignUpResponse>(new SignUpResponse
             {
-                Email = request.Email,
-                Username = request.Username
+                Id=user.Id,
+                Email = user.Email,
+                UserName = user.UserName
             }, Messages.SignUpSuccessfully + verificationUri);
         }
 
