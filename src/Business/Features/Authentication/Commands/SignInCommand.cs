@@ -6,7 +6,14 @@ namespace Business.Features.Authentication.Commands
 {
     public class SignInCommand : IRequest<IDataResult<SignInResponse>>
     {
-        public string UserName { get; set; }
+        /// <summary>
+        ///     Username
+        /// </summary>
+        public string Username { get; set; }
+
+        /// <summary>
+        ///     Password
+        /// </summary>
         public string Password { get; set; }
     }
 }

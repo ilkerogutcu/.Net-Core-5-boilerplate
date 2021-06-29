@@ -13,6 +13,9 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace Business.Features.Authentication.Handlers.Commands
 {
+    /// <summary>
+    /// Confirm email
+    /// </summary>
     public class ConfirmEmailCommandHandler : IRequestHandler<ConfirmEmailCommand, IResult>
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -22,6 +25,12 @@ namespace Business.Features.Authentication.Handlers.Commands
             _userManager = userManager;
         }
 
+        /// <summary>
+        /// Confirm email
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [LogAspect(typeof(FileLogger))]
         public async Task<IResult> Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
         {

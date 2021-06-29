@@ -20,6 +20,9 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Business.Features.Authentication.Handlers.Commands
 {
+    /// <summary>
+    /// Sign in
+    /// </summary>
     public class SignInCommandHandler : IRequestHandler<SignInCommand, IDataResult<SignInResponse>>
     {
         private readonly IConfiguration _configuration;
@@ -38,7 +41,7 @@ namespace Business.Features.Authentication.Handlers.Commands
         public async Task<IDataResult<SignInResponse>> Handle(SignInCommand request,
             CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByNameAsync(request.UserName);
+            var user = await _userManager.FindByNameAsync(request.Username);
             if (user is null) return new ErrorDataResult<SignInResponse>(Messages.UserNotFound);
             if (!user.EmailConfirmed) return new ErrorDataResult<SignInResponse>(Messages.EmailIsNotConfirmed);
 
@@ -53,7 +56,7 @@ namespace Business.Features.Authentication.Handlers.Commands
                 Id = user.Id,
                 Email = user.Email,
                 Roles = userRoles.ToList(),
-                UserName = user.UserName,
+                Username = user.UserName,
                 IsVerified = user.EmailConfirmed,
                 JwtToken = new JwtSecurityTokenHandler().WriteToken(token)
             }, Messages.SignInSuccessfully);

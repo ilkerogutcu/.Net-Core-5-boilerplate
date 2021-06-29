@@ -13,7 +13,10 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Business.Features.Authentication.Handlers.Queries
 {
-    public class GetUserByUsernameQueryHandler : IRequestHandler<GetUserByUserNameQuery, IDataResult<UserResponse>>
+    /// <summary>
+    /// Get user by username
+    /// </summary>
+    public class GetUserByUsernameQueryHandler : IRequestHandler<GetUserByUsernameQuery, IDataResult<UserResponse>>
     {
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -24,8 +27,11 @@ namespace Business.Features.Authentication.Handlers.Queries
             _userManager = userManager;
         }
 
+        /// <summary>
+        /// Get user by username
+        /// </summary>
         [LogAspect(typeof(FileLogger))]
-        public async Task<IDataResult<UserResponse>> Handle(GetUserByUserNameQuery request,
+        public async Task<IDataResult<UserResponse>> Handle(GetUserByUsernameQuery request,
             CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByNameAsync(request.Username);

@@ -15,6 +15,9 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace Business.Features.Authentication.Handlers.Commands
 {
+    /// <summary>
+    ///     Reset password with the token of reset password created by forgot password
+    /// </summary>
     public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand, IResult>
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -24,6 +27,12 @@ namespace Business.Features.Authentication.Handlers.Commands
             _userManager = userManager;
         }
 
+        /// <summary>
+        ///     Reset password
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [ValidationAspect(typeof(ResetPasswordValidator))]
         [LogAspect(typeof(FileLogger))]
         public async Task<IResult> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)

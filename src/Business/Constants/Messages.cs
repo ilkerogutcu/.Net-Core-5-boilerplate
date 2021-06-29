@@ -1,5 +1,8 @@
 ﻿namespace Business.Constants
 {
+    /// <summary>
+    /// Messages for responses
+    /// </summary>
     public static class Messages
     {
         public const string UsernameAlreadyExist = "Username already exist!";

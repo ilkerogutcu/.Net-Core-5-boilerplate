@@ -8,6 +8,9 @@ using Module = Autofac.Module;
 
 namespace Business.DependencyResolvers
 {
+    /// <summary>
+    /// Register dependencies for business layer
+    /// </summary>
     public class AutofacBusinessModule : Module
     {
         protected override void Load(ContainerBuilder builder)
@@ -29,7 +32,6 @@ namespace Business.DependencyResolvers
                 {
                     Selector = new AspectInterceptorSelector()
                 }).SingleInstance();
-
         }
     }
 }

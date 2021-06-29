@@ -24,6 +24,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace Business.Features.Authentication.Handlers.Commands
 {
+    /// <summary>
+    /// Sign up for user
+    /// </summary>
     [TransactionScopeAspectAsync]
     public class SignUpUserCommandHandler : IRequestHandler<SignUpUserCommand, IDataResult<SignUpResponse>>
     {
@@ -41,21 +44,27 @@ namespace Business.Features.Authentication.Handlers.Commands
             _config = config;
         }
 
+        /// <summary>
+        /// Create a new user with user role
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [ValidationAspect(typeof(SignUpValidator))]
         [LogAspect(typeof(FileLogger))]
         public async Task<IDataResult<SignUpResponse>> Handle(SignUpUserCommand request,
             CancellationToken cancellationToken)
         {
-            var isUserAlreadyExist = await _userManager.FindByNameAsync(request.UserName);
+            var isUserAlreadyExist = await _userManager.FindByNameAsync(request.Username);
             if (isUserAlreadyExist is not null)
                 return new ErrorDataResult<SignUpResponse>(Messages.UsernameAlreadyExist);
 
-            var isEmailAlreadyExist = await _userManager.FindByEmailAsync(request.UserName);
+            var isEmailAlreadyExist = await _userManager.FindByEmailAsync(request.Username);
             if (isEmailAlreadyExist is not null) return new ErrorDataResult<SignUpResponse>(Messages.EmailAlreadyExist);
 
             var user = new ApplicationUser
             {
-                UserName = request.UserName,
+                UserName = request.Username,
                 Email = request.Email,
                 FirstName = request.FirstName,
                 LastName = request.LastName
@@ -78,13 +87,23 @@ namespace Business.Features.Authentication.Handlers.Commands
             }, Messages.SignUpSuccessfully + verificationUri);
         }
 
+        /// <summary>
+        /// Send verification email 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>Verification url</returns>
         private async Task<string> SendVerificationEmail(ApplicationUser user)
         {
+            // Generate token for confirm email
             var verificationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             verificationToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(verificationToken));
+            
+            // Generate endpoint url for verification url
             var endPointUrl =
                 new Uri(string.Concat($"{_config.GetSection("BaseUrl").Value}", "api/account/confirm-email/"));
             var verificationUrl = QueryHelpers.AddQueryString(endPointUrl.ToString(), "userId", user.Id);
+            
+            // Edit forgot password email template for reset password link
             var emailTemplatePath = Path.Combine(Environment.CurrentDirectory,
                 @"MailTemplates\SendVerificationEmailTemplate.html");
             using (var reader = new StreamReader(emailTemplatePath))

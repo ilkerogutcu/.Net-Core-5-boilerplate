@@ -83,7 +83,7 @@ namespace WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("get-by-username")]
-        public async Task<IActionResult> GetUserByUsername([FromBody] GetUserByUserNameQuery query)
+        public async Task<IActionResult> GetUserByUsername([FromBody] GetUserByUsernameQuery query)
         {
             var result = await _mediator.Send(query);
             return result.Success ? Ok(result.Data) : BadRequest(result.Message);

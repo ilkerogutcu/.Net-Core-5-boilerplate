@@ -18,6 +18,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace Business.Features.Authentication.Handlers.Commands
 {
+    /// <summary>
+    ///     Send forgot password email
+    /// </summary>
     public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordCommand, IResult>
     {
         private readonly IConfiguration _config;
@@ -48,16 +51,24 @@ namespace Business.Features.Authentication.Handlers.Commands
             }
         }
 
+        /// <summary>
+        ///     Send email
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         private async Task SendForgotPasswordEmail(ApplicationUser user)
         {
+            // Generate token for reset password
             var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
             resetToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(resetToken));
 
+            // Generate endpoint url for reset password
             var endPointUrl =
                 new Uri(string.Concat($"{_config.GetSection("BaseUrl").Value}", "api/account/reset-password/"));
             var resetTokenUrl = QueryHelpers.AddQueryString(endPointUrl.ToString(), "username", user.UserName);
             resetTokenUrl = QueryHelpers.AddQueryString(resetTokenUrl, "token", resetToken);
 
+            // Edit forgot password email template for reset password link
             var emailTemplatePath = Path.Combine(Environment.CurrentDirectory,
                 @"MailTemplates\SendForgotPasswordEmailTemplate.html");
             using var reader = new StreamReader(emailTemplatePath);

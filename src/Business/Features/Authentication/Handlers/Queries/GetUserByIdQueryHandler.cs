@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Business.Features.Authentication.Handlers.Queries
 {
+    /// <summary>
+    /// Get user by id
+    /// </summary>
     public class GetUserByIdQueryHandler: IRequestHandler<GetUserByIdQuery, IDataResult<UserResponse>>
     {
         private readonly IMapper _mapper;
@@ -21,7 +24,9 @@ namespace Business.Features.Authentication.Handlers.Queries
             _mapper = mapper;
             _userManager = userManager;
         }
-        
+        /// <summary>
+        /// Get user by id
+        /// </summary>
         public async Task<IDataResult<UserResponse>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByIdAsync(request.Id);
