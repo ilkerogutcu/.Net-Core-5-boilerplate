@@ -1,6 +1,10 @@
-﻿using Entities.Concrete;
+﻿#region
+
+using Entities.Concrete;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+
+#endregion
 
 namespace DataAccess.Concrete.EntityFramework.Contexts
 {

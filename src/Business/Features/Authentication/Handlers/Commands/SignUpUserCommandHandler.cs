@@ -13,11 +13,11 @@ using Core.Aspects.Autofac.Logger;
 using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using Core.Entities.DTOs.Authentication.Responses;
 using Core.Entities.Mail;
 using Core.Utilities.Mail;
 using Core.Utilities.Results;
 using Entities.Concrete;
-using Entities.DTOs.Authentication.Responses;
 using Entities.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -26,7 +26,7 @@ using Microsoft.Extensions.Configuration;
 
 #endregion
 
-namespace Business.Features.Authentication.Handlers
+namespace Business.Features.Authentication.Handlers.Commands
 {
     [TransactionScopeAspectAsync]
     public class SignUpUserCommandHandler : IRequestHandler<SignUpUserCommand, IDataResult<SignUpResponse>>
@@ -51,15 +51,17 @@ namespace Business.Features.Authentication.Handlers
             CancellationToken cancellationToken)
         {
             var isUserAlreadyExist = await _userManager.FindByNameAsync(request.Username);
-            if (isUserAlreadyExist != null)
+            if (isUserAlreadyExist is not null)
             {
                 return new ErrorDataResult<SignUpResponse>(Messages.UsernameAlreadyExist);
             }
+
             var isEmailAlreadyExist = await _userManager.FindByEmailAsync(request.Username);
-            if (isEmailAlreadyExist != null)
+            if (isEmailAlreadyExist is not null)
             {
                 return new ErrorDataResult<SignUpResponse>(Messages.EmailAlreadyExist);
             }
+
             var user = new ApplicationUser
             {
                 UserName = request.Username,
@@ -92,9 +94,11 @@ namespace Business.Features.Authentication.Handlers
         {
             var verificationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             verificationToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(verificationToken));
-            var endPointUrl = new Uri(string.Concat($"{_config.GetSection("BaseUrl").Value}", "api/account/confirm-email/"));
+            var endPointUrl =
+                new Uri(string.Concat($"{_config.GetSection("BaseUrl").Value}", "api/account/confirm-email/"));
             var verificationUrl = QueryHelpers.AddQueryString(endPointUrl.ToString(), "userId", user.Id);
-            var emailTemplatePath =Path.Combine(Environment.CurrentDirectory, @"MailTemplates\SendVerificationEmailTemplate.html");
+            var emailTemplatePath = Path.Combine(Environment.CurrentDirectory,
+                @"MailTemplates\SendVerificationEmailTemplate.html");
             using (var reader = new StreamReader(emailTemplatePath))
             {
                 var mailTemplate = await reader.ReadToEndAsync();
@@ -106,6 +110,7 @@ namespace Business.Features.Authentication.Handlers
                     Body = mailTemplate.Replace("[verificationUrl]", verificationUrl)
                 });
             }
+
             return QueryHelpers.AddQueryString(verificationUrl, "verificationToken", verificationToken);
         }
     }

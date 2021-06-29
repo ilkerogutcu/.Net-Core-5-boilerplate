@@ -1,9 +1,13 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Transactions;
 using Castle.DynamicProxy;
 using Core.Utilities.Interceptors;
 using Core.Utilities.IoC;
 using Microsoft.EntityFrameworkCore;
+
+#endregion
 
 namespace Core.Aspects.Autofac.Transaction
 {

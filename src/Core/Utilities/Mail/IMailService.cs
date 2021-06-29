@@ -1,5 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿#region
+
+using System.Threading.Tasks;
 using Core.Entities.Mail;
+
+#endregion
 
 namespace Core.Utilities.Mail
 {

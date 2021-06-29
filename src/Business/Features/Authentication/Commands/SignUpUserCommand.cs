@@ -1,6 +1,10 @@
-﻿using Core.Utilities.Results;
-using Entities.DTOs.Authentication.Responses;
+﻿#region
+
+using Core.Entities.DTOs.Authentication.Responses;
+using Core.Utilities.Results;
 using MediatR;
+
+#endregion
 
 namespace Business.Features.Authentication.Commands
 {

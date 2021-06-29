@@ -1,5 +1,9 @@
-﻿using Core.Utilities.Results;
+﻿#region
+
+using Core.Utilities.Results;
 using MediatR;
+
+#endregion
 
 namespace Business.Features.Authentication.Commands
 {

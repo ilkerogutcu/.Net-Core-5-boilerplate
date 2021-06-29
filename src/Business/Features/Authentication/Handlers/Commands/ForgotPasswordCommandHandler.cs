@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -16,7 +18,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
 
-namespace Business.Features.Authentication.Handlers
+#endregion
+
+namespace Business.Features.Authentication.Handlers.Commands
 {
     public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordCommand, IResult>
     {
@@ -38,7 +42,7 @@ namespace Business.Features.Authentication.Handlers
             try
             {
                 var user = await _userManager.FindByNameAsync(request.Username);
-                if (user == null) return new ErrorResult(Messages.UserNotFound);
+                if (user is null) return new ErrorResult(Messages.UserNotFound);
                 await SendForgotPasswordEmail(user);
                 return new SuccessResult(Messages.SentForgotPasswordEmailSuccessfully);
             }

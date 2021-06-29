@@ -1,4 +1,8 @@
-﻿using FluentValidation;
+﻿#region
+
+using FluentValidation;
+
+#endregion
 
 namespace Core.CrossCuttingConcerns.Validation
 {

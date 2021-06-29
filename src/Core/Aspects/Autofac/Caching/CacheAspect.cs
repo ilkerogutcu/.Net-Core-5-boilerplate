@@ -1,9 +1,13 @@
-﻿using System.Linq;
+﻿#region
+
+using System.Linq;
 using Castle.DynamicProxy;
 using Core.CrossCuttingConcerns.Caching;
 using Core.Utilities.Interceptors;
 using Core.Utilities.IoC;
 using Microsoft.Extensions.DependencyInjection;
+
+#endregion
 
 namespace Core.Aspects.Autofac.Caching
 {

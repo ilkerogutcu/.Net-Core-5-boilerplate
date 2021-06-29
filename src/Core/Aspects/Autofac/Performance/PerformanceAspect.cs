@@ -1,8 +1,12 @@
-﻿using System.Diagnostics;
+﻿#region
+
+using System.Diagnostics;
 using Castle.DynamicProxy;
 using Core.Utilities.Interceptors;
 using Core.Utilities.IoC;
 using Microsoft.Extensions.DependencyInjection;
+
+#endregion
 
 namespace Core.Aspects.Autofac.Performance
 {

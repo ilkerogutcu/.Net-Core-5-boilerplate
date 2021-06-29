@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.IO;
 using Core.CrossCuttingConcerns.Logging.Serilog.ConfigurationModels;
 using Core.Utilities.IoC;
@@ -6,6 +8,8 @@ using Core.Utilities.Messages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+
+#endregion
 
 namespace Core.CrossCuttingConcerns.Logging.Serilog.Loggers
 {

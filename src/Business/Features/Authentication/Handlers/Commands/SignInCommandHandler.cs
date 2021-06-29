@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -10,13 +12,15 @@ using Business.Constants;
 using Business.Features.Authentication.Commands;
 using Core.Aspects.Autofac.Logger;
 using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using Core.Entities.DTOs.Authentication.Responses;
 using Core.Utilities.Results;
 using Entities.Concrete;
-using Entities.DTOs.Authentication.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+
+#endregion
 
 namespace Business.Features.Authentication.Handlers
 {
@@ -39,7 +43,7 @@ namespace Business.Features.Authentication.Handlers
             CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByNameAsync(request.Username);
-            if (user == null) return new ErrorDataResult<SignInResponse>(Messages.UserNotFound);
+            if (user is null) return new ErrorDataResult<SignInResponse>(Messages.UserNotFound);
             if (!user.EmailConfirmed) return new ErrorDataResult<SignInResponse>(Messages.EmailIsNotConfirmed);
 
             var result = await _signInManager.PasswordSignInAsync(user.UserName, request.Password,

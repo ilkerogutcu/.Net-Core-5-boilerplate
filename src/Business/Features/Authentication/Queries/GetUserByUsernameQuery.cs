@@ -6,11 +6,10 @@ using MediatR;
 
 #endregion
 
-namespace Business.Features.Authentication.Commands
+namespace Business.Features.Authentication.Queries
 {
-    public class SignInCommand: IRequest<IDataResult<SignInResponse>>
+    public class GetUserByUsernameQuery:IRequest<IDataResult<UserResponse>>
     {
         public string Username { get; set; }
-        public string Password { get; set; }
     }
 }

@@ -1,10 +1,14 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Core.Entities;
 using Microsoft.EntityFrameworkCore;
+
+#endregion
 
 namespace Core.DataAccess.EntityFramework
 {
@@ -121,7 +125,7 @@ namespace Core.DataAccess.EntityFramework
             }
             catch (Exception ex)
             {
-                if (exceptionAction == null) throw;
+                if (exceptionAction is null) throw;
 
                 exceptionAction(ex);
             }
@@ -137,7 +141,7 @@ namespace Core.DataAccess.EntityFramework
 
         public async Task<int> GetCountAsync(Expression<Func<TEntity, bool>> expression = null)
         {
-            if (expression == null)
+            if (expression is null)
                 return await Context.Set<TEntity>().CountAsync();
             return await Context.Set<TEntity>().CountAsync(expression);
         }

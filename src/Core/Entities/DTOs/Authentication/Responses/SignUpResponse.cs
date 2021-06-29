@@ -1,4 +1,4 @@
-﻿namespace Entities.DTOs.Authentication.Responses
+﻿namespace Core.Entities.DTOs.Authentication.Responses
 {
     public class SignUpResponse
     {

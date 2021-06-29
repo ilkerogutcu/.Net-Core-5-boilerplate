@@ -1,6 +1,10 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Threading.Tasks;
 using Castle.DynamicProxy;
+
+#endregion
 
 namespace Core.Utilities.Interceptors
 {
@@ -30,8 +34,7 @@ namespace Core.Utilities.Interceptors
             {
                 invocation.Proceed();
                 var result = invocation.ReturnValue as Task;
-                if (result != null)
-                    result.Wait();
+                result?.Wait();
             }
             catch (Exception e)
             {

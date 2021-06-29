@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
-using Core.Entities;
+﻿#region
 
-namespace Entities.DTOs.Authentication.Responses
+using System.Collections.Generic;
+
+#endregion
+
+namespace Core.Entities.DTOs.Authentication.Responses
 {
     public class SignInResponse:IDto
     {

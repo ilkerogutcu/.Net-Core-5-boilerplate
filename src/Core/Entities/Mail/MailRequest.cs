@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿#region
+
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
+
+#endregion
 
 namespace Core.Entities.Mail
 {

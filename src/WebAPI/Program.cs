@@ -1,8 +1,12 @@
+#region
+
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Business.DependencyResolvers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+
+#endregion
 
 namespace WebAPI
 {

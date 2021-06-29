@@ -1,10 +1,14 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Linq;
 using Castle.DynamicProxy;
 using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Interceptors;
 using Core.Utilities.Messages;
 using FluentValidation;
+
+#endregion
 
 namespace Core.Aspects.Autofac.Validation
 {
