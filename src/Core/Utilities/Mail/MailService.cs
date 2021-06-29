@@ -1,6 +1,4 @@
-﻿#region
-
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Entities.Mail;
@@ -9,8 +7,6 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
-
-#endregion
 
 namespace Core.Utilities.Mail
 {

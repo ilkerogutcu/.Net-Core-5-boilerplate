@@ -1,9 +1,5 @@
-﻿#region
-
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-
-#endregion
 
 namespace StarterProject.DataAccess.Migrations
 {

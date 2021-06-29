@@ -1,9 +1,5 @@
-﻿#region
-
-using System.Text;
+﻿using System.Text;
 using Microsoft.IdentityModel.Tokens;
-
-#endregion
 
 namespace Core.Utilities.Encryption
 {

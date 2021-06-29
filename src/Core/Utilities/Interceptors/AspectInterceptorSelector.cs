@@ -1,11 +1,7 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Linq;
 using System.Reflection;
 using Castle.DynamicProxy;
-
-#endregion
 
 namespace Core.Utilities.Interceptors
 {

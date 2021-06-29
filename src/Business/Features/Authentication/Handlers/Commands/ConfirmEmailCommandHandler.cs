@@ -1,6 +1,4 @@
-﻿#region
-
-using System.Text;
+﻿using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Business.Constants;
@@ -12,8 +10,6 @@ using Entities.Concrete;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
-
-#endregion
 
 namespace Business.Features.Authentication.Handlers.Commands
 {

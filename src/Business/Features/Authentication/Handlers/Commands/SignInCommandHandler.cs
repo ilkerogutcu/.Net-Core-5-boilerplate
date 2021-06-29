@@ -1,6 +1,4 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -20,15 +18,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-#endregion
-
-namespace Business.Features.Authentication.Handlers
+namespace Business.Features.Authentication.Handlers.Commands
 {
     public class SignInCommandHandler : IRequestHandler<SignInCommand, IDataResult<SignInResponse>>
     {
         private readonly IConfiguration _configuration;
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public SignInCommandHandler(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager, IConfiguration configuration)
@@ -59,7 +55,7 @@ namespace Business.Features.Authentication.Handlers
                 Username = user.UserName,
                 IsVerified = user.EmailConfirmed,
                 JwtToken = new JwtSecurityTokenHandler().WriteToken(token)
-            },Messages.SignInSuccessfully);
+            }, Messages.SignInSuccessfully);
         }
 
         private async Task<JwtSecurityToken> GenerateJwtToken(ApplicationUser user)

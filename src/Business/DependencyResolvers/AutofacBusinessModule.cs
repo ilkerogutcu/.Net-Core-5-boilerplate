@@ -1,14 +1,10 @@
-﻿#region
-
-using System.Reflection;
+﻿using System.Reflection;
 using Autofac;
 using Autofac.Extras.DynamicProxy;
 using Castle.DynamicProxy;
 using Core.Utilities.Interceptors;
 using MediatR;
 using Module = Autofac.Module;
-
-#endregion
 
 namespace Business.DependencyResolvers
 {

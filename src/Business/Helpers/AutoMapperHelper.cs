@@ -1,10 +1,6 @@
-﻿#region
-
-using AutoMapper;
+﻿using AutoMapper;
 using Core.Entities.DTOs.Authentication.Responses;
 using Entities.Concrete;
-
-#endregion
 
 namespace Business.Helpers
 {

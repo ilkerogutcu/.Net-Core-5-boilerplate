@@ -1,8 +1,4 @@
-﻿#region
-
-using Serilog;
-
-#endregion
+﻿using Serilog;
 
 namespace Core.CrossCuttingConcerns.Logging.Serilog
 {

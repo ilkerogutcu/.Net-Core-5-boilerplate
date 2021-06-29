@@ -1,10 +1,6 @@
-﻿#region
-
-using Business.Constants;
+﻿using Business.Constants;
 using Business.Features.Authentication.Commands;
 using FluentValidation;
-
-#endregion
 
 namespace Business.Features.Authentication.ValidationRules
 {

@@ -1,6 +1,4 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -8,8 +6,6 @@ using System.Text.RegularExpressions;
 using Core.Utilities.IoC;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
-
-#endregion
 
 namespace Core.CrossCuttingConcerns.Caching.Microsoft
 {

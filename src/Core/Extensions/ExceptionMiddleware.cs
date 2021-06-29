@@ -1,11 +1,7 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-
-#endregion
 
 namespace Core.Extensions
 {

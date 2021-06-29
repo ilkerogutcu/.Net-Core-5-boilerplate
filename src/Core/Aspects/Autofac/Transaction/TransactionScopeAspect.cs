@@ -1,11 +1,7 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Transactions;
 using Castle.DynamicProxy;
 using Core.Utilities.Interceptors;
-
-#endregion
 
 namespace Core.Aspects.Autofac.Transaction
 {

@@ -1,12 +1,8 @@
-﻿#region
-
-using System;
+﻿using System;
 using DataAccess.Concrete.EntityFramework.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-
-#endregion
 
 namespace StarterProject.DataAccess.Migrations
 {

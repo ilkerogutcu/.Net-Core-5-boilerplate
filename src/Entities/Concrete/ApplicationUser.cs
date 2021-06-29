@@ -1,8 +1,4 @@
-﻿#region
-
-using Microsoft.AspNetCore.Identity;
-
-#endregion
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace Entities.Concrete
 {

@@ -1,8 +1,4 @@
-﻿#region
-
-using Microsoft.Extensions.DependencyInjection;
-
-#endregion
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Utilities.IoC
 {

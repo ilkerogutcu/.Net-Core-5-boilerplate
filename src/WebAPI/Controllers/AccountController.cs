@@ -1,13 +1,8 @@
-﻿#region
-
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Business.Features.Authentication.Commands;
 using Business.Features.Authentication.Queries;
-using Core.Utilities.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-
-#endregion
 
 namespace WebAPI.Controllers
 {
@@ -57,8 +52,15 @@ namespace WebAPI.Controllers
             return result.Success ? Ok(result) : BadRequest(result);
         }
         
-        [HttpPost]
+        [HttpPost("get-by-username")]
         public async Task<IActionResult> GetUserByUsername([FromBody] GetUserByUsernameQuery query)
+        {
+            var result = await _mediator.Send(query);
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+        
+        [HttpPost("get-by-email")]
+        public async Task<IActionResult> GetUserByEmail([FromBody] GetUserByEmailQuery query)
         {
             var result = await _mediator.Send(query);
             return result.Success ? Ok(result) : BadRequest(result);

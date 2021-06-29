@@ -1,6 +1,4 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -23,8 +21,6 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
-
-#endregion
 
 namespace Business.Features.Authentication.Handlers.Commands
 {
@@ -52,15 +48,10 @@ namespace Business.Features.Authentication.Handlers.Commands
         {
             var isUserAlreadyExist = await _userManager.FindByNameAsync(request.Username);
             if (isUserAlreadyExist is not null)
-            {
                 return new ErrorDataResult<SignUpResponse>(Messages.UsernameAlreadyExist);
-            }
 
             var isEmailAlreadyExist = await _userManager.FindByEmailAsync(request.Username);
-            if (isEmailAlreadyExist is not null)
-            {
-                return new ErrorDataResult<SignUpResponse>(Messages.EmailAlreadyExist);
-            }
+            if (isEmailAlreadyExist is not null) return new ErrorDataResult<SignUpResponse>(Messages.EmailAlreadyExist);
 
             var user = new ApplicationUser
             {
@@ -71,15 +62,11 @@ namespace Business.Features.Authentication.Handlers.Commands
             };
             var result = await _userManager.CreateAsync(user, request.Password);
             if (!result.Succeeded)
-            {
                 return new ErrorDataResult<SignUpResponse>(Messages.SignUpFailed +
                                                            $":{result.Errors.ToList()[0].Description}");
-            }
 
             if (!await _roleManager.RoleExistsAsync(Roles.User.ToString()))
-            {
                 await _roleManager.CreateAsync(new IdentityRole(Roles.User.ToString()));
-            }
 
             await _userManager.AddToRoleAsync(user, Roles.User.ToString());
             var verificationUri = await SendVerificationEmail(user);
