@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Business.Features.Authentication.Commands
 {
-    public class ResetPasswordCommand: IRequest<IResult>
+    public class ResetPasswordCommand : IRequest<IResult>
     {
         public string Username { get; set; }
         public string ResetPasswordToken { get; set; }

@@ -30,8 +30,7 @@ namespace Core.Utilities.Interceptors
             {
                 invocation.Proceed();
                 var result = invocation.ReturnValue as Task;
-                if (result != null)
-                    result.Wait();
+                result?.Wait();
             }
             catch (Exception e)
             {

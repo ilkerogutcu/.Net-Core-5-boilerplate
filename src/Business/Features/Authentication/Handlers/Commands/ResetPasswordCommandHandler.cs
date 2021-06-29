@@ -13,7 +13,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace Business.Features.Authentication.Handlers
+namespace Business.Features.Authentication.Handlers.Commands
 {
     public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand, IResult>
     {
@@ -29,7 +29,7 @@ namespace Business.Features.Authentication.Handlers
         public async Task<IResult> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByNameAsync(request.Username);
-            if (user == null) return new ErrorResult(Messages.UserNotFound);
+            if (user is null) return new ErrorResult(Messages.UserNotFound);
             request.ResetPasswordToken =
                 Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.ResetPasswordToken));
             var result = await _userManager.ResetPasswordAsync(user, request.ResetPasswordToken, request.Password);

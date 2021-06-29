@@ -11,7 +11,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace Business.Features.Authentication.Handlers
+namespace Business.Features.Authentication.Handlers.Commands
 {
     public class ConfirmEmailCommandHandler : IRequestHandler<ConfirmEmailCommand, IResult>
     {
@@ -26,11 +26,11 @@ namespace Business.Features.Authentication.Handlers
         public async Task<IResult> Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByIdAsync(request.UserId);
-            if (user == null) return new ErrorResult(Messages.UserNotFound);
+            if (user is null) return new ErrorResult(Messages.UserNotFound);
             request.VerificationToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.VerificationToken));
             var result = await _userManager.ConfirmEmailAsync(user, request.VerificationToken);
             return result.Succeeded
-                ? (IResult) new SuccessResult(Messages.EmailSuccessfullyConfirmed)
+                ? new SuccessResult(Messages.EmailSuccessfullyConfirmed)
                 : new ErrorResult(Messages.ErrorVerifyingMail);
         }
     }

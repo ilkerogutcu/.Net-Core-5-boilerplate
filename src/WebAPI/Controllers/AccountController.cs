@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Business.Features.Authentication.Commands;
+using Business.Features.Authentication.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -48,6 +49,27 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> ResetPassword(ResetPasswordCommand command)
         {
             var result = await _mediator.Send(command);
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpPost("get-by-id")]
+        public async Task<IActionResult> GetUserById([FromBody] GetUserByIdQuery query)
+        {
+            var result = await _mediator.Send(query);
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpPost("get-by-username")]
+        public async Task<IActionResult> GetUserByUsername([FromBody] GetUserByUserNameQuery query)
+        {
+            var result = await _mediator.Send(query);
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpPost("get-by-email")]
+        public async Task<IActionResult> GetUserByEmail([FromBody] GetUserByEmailQuery query)
+        {
+            var result = await _mediator.Send(query);
             return result.Success ? Ok(result) : BadRequest(result);
         }
     }

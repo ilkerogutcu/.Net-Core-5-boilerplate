@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Core.Entities.DTOs.Authentication.Responses;
+using Entities.Concrete;
 
 namespace Business.Helpers
 {
@@ -6,7 +8,7 @@ namespace Business.Helpers
     {
         public AutoMapperHelper()
         {
-           
+            CreateMap<ApplicationUser, UserResponse>().ReverseMap();
         }
     }
 }

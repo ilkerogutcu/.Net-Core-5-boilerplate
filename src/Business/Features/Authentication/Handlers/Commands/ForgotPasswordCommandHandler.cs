@@ -16,13 +16,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
 
-namespace Business.Features.Authentication.Handlers
+namespace Business.Features.Authentication.Handlers.Commands
 {
     public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordCommand, IResult>
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _config;
         private readonly IMailService _mailService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public ForgotPasswordCommandHandler(UserManager<ApplicationUser> userManager, IConfiguration config,
             IMailService mailService)
@@ -38,7 +38,7 @@ namespace Business.Features.Authentication.Handlers
             try
             {
                 var user = await _userManager.FindByNameAsync(request.Username);
-                if (user == null) return new ErrorResult(Messages.UserNotFound);
+                if (user is null) return new ErrorResult(Messages.UserNotFound);
                 await SendForgotPasswordEmail(user);
                 return new SuccessResult(Messages.SentForgotPasswordEmailSuccessfully);
             }
@@ -52,11 +52,12 @@ namespace Business.Features.Authentication.Handlers
         {
             var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
             resetToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(resetToken));
-            
-            var endPointUrl = new Uri(string.Concat($"{_config.GetSection("BaseUrl").Value}", "api/account/reset-password/"));
+
+            var endPointUrl =
+                new Uri(string.Concat($"{_config.GetSection("BaseUrl").Value}", "api/account/reset-password/"));
             var resetTokenUrl = QueryHelpers.AddQueryString(endPointUrl.ToString(), "username", user.UserName);
             resetTokenUrl = QueryHelpers.AddQueryString(resetTokenUrl, "token", resetToken);
-            
+
             var emailTemplatePath = Path.Combine(Environment.CurrentDirectory,
                 @"MailTemplates\SendForgotPasswordEmailTemplate.html");
             using var reader = new StreamReader(emailTemplatePath);

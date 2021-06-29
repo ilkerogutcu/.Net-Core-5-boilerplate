@@ -10,21 +10,21 @@ using Business.Constants;
 using Business.Features.Authentication.Commands;
 using Core.Aspects.Autofac.Logger;
 using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using Core.Entities.DTOs.Authentication.Responses;
 using Core.Utilities.Results;
 using Entities.Concrete;
-using Entities.DTOs.Authentication.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Business.Features.Authentication.Handlers
+namespace Business.Features.Authentication.Handlers.Commands
 {
     public class SignInCommandHandler : IRequestHandler<SignInCommand, IDataResult<SignInResponse>>
     {
         private readonly IConfiguration _configuration;
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public SignInCommandHandler(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager, IConfiguration configuration)
@@ -38,8 +38,8 @@ namespace Business.Features.Authentication.Handlers
         public async Task<IDataResult<SignInResponse>> Handle(SignInCommand request,
             CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByNameAsync(request.Username);
-            if (user == null) return new ErrorDataResult<SignInResponse>(Messages.UserNotFound);
+            var user = await _userManager.FindByNameAsync(request.UserName);
+            if (user is null) return new ErrorDataResult<SignInResponse>(Messages.UserNotFound);
             if (!user.EmailConfirmed) return new ErrorDataResult<SignInResponse>(Messages.EmailIsNotConfirmed);
 
             var result = await _signInManager.PasswordSignInAsync(user.UserName, request.Password,
@@ -50,12 +50,13 @@ namespace Business.Features.Authentication.Handlers
             var userRoles = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
             return new SuccessDataResult<SignInResponse>(new SignInResponse
             {
+                Id = user.Id,
                 Email = user.Email,
                 Roles = userRoles.ToList(),
-                Username = user.UserName,
+                UserName = user.UserName,
                 IsVerified = user.EmailConfirmed,
                 JwtToken = new JwtSecurityTokenHandler().WriteToken(token)
-            },Messages.SignInSuccessfully);
+            }, Messages.SignInSuccessfully);
         }
 
         private async Task<JwtSecurityToken> GenerateJwtToken(ApplicationUser user)
