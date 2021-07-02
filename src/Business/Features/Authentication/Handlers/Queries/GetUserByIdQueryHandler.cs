@@ -12,9 +12,9 @@ using Microsoft.AspNetCore.Identity;
 namespace Business.Features.Authentication.Handlers.Queries
 {
     /// <summary>
-    /// Get user by id
+    ///     Get user by id
     /// </summary>
-    public class GetUserByIdQueryHandler: IRequestHandler<GetUserByIdQuery, IDataResult<UserResponse>>
+    public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, IDataResult<UserResponse>>
     {
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -24,10 +24,12 @@ namespace Business.Features.Authentication.Handlers.Queries
             _mapper = mapper;
             _userManager = userManager;
         }
+
         /// <summary>
-        /// Get user by id
+        ///     Get user by id
         /// </summary>
-        public async Task<IDataResult<UserResponse>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
+        public async Task<IDataResult<UserResponse>> Handle(GetUserByIdQuery request,
+            CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByIdAsync(request.Id);
             if (user is null) return new ErrorDataResult<UserResponse>(Messages.UserNotFound);

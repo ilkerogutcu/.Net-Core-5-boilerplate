@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Identity;
 namespace Business.Features.Authentication.Handlers.Queries
 {
     /// <summary>
-    /// Get user by username
+    ///     Get user by username
     /// </summary>
     public class GetUserByUsernameQueryHandler : IRequestHandler<GetUserByUsernameQuery, IDataResult<UserResponse>>
     {
@@ -28,7 +28,7 @@ namespace Business.Features.Authentication.Handlers.Queries
         }
 
         /// <summary>
-        /// Get user by username
+        ///     Get user by username
         /// </summary>
         [LogAspect(typeof(FileLogger))]
         public async Task<IDataResult<UserResponse>> Handle(GetUserByUsernameQuery request,

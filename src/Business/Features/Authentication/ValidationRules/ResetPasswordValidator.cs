@@ -5,7 +5,7 @@ using FluentValidation;
 namespace Business.Features.Authentication.ValidationRules
 {
     /// <summary>
-    /// Validator for reset password
+    ///     Validator for reset password
     /// </summary>
     public class ResetPasswordValidator : AbstractValidator<ResetPasswordCommand>
     {

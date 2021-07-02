@@ -98,10 +98,5 @@ namespace Core.Aspects.Autofac.Logger
             }).ToList();
         }
 
-        private static string GetProjectName()
-        {
-            var configuration = ServiceTool.ServiceProvider.GetService<IConfiguration>();
-            return configuration?.GetSection("SeriLogConfigurations:ProjectName").Value;
-        }
     }
 }

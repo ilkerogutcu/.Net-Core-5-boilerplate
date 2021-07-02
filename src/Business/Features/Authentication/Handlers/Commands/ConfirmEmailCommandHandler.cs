@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.WebUtilities;
 namespace Business.Features.Authentication.Handlers.Commands
 {
     /// <summary>
-    /// Confirm email
+    ///     Confirm email
     /// </summary>
     public class ConfirmEmailCommandHandler : IRequestHandler<ConfirmEmailCommand, IResult>
     {
@@ -26,7 +26,7 @@ namespace Business.Features.Authentication.Handlers.Commands
         }
 
         /// <summary>
-        /// Confirm email
+        ///     Confirm email
         /// </summary>
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>

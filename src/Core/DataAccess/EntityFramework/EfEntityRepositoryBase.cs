@@ -46,14 +46,14 @@ namespace Core.DataAccess.EntityFramework
             return await Context.Set<TEntity>().AsQueryable().FirstOrDefaultAsync(expression);
         }
 
-        public IEnumerable<TEntity> GetList(Expression<Func<TEntity, bool>> expression = null)
+        public List<TEntity> GetList(Expression<Func<TEntity, bool>> expression = null)
         {
             return expression == null
-                ? Context.Set<TEntity>().AsNoTracking()
-                : Context.Set<TEntity>().Where(expression).AsNoTracking();
+                ? Context.Set<TEntity>().AsNoTracking().ToList()
+                : Context.Set<TEntity>().Where(expression).AsNoTracking().ToList();
         }
 
-        public async Task<IEnumerable<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> expression = null)
+        public async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> expression = null)
         {
             return expression == null
                 ? await Context.Set<TEntity>().ToListAsync()

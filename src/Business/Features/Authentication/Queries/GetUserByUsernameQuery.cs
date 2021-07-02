@@ -5,7 +5,7 @@ using MediatR;
 namespace Business.Features.Authentication.Queries
 {
     /// <summary>
-    /// Get user by username
+    ///     Get user by username
     /// </summary>
     public class GetUserByUsernameQuery : IRequest<IDataResult<UserResponse>>
     {

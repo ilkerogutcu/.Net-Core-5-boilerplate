@@ -5,7 +5,7 @@ using FluentValidation;
 namespace Business.Features.Authentication.ValidationRules
 {
     /// <summary>
-    /// Validator for sign up
+    ///     Validator for sign up
     /// </summary>
     public class SignUpValidator : AbstractValidator<SignUpUserCommand>
     {
