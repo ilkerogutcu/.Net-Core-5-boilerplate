@@ -21,7 +21,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace Business.Features.Authentication.Handlers.Commands
 {
     /// <summary>
-    /// Sign in
+    ///     Sign in
     /// </summary>
     public class SignInCommandHandler : IRequestHandler<SignInCommand, IDataResult<SignInResponse>>
     {

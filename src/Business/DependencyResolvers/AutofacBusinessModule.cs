@@ -3,19 +3,23 @@ using Autofac;
 using Autofac.Extras.DynamicProxy;
 using Castle.DynamicProxy;
 using Core.Utilities.Interceptors;
+using DataAccess.Abstract;
+using DataAccess.Concrete.EntityFramework;
 using MediatR;
 using Module = Autofac.Module;
 
 namespace Business.DependencyResolvers
 {
     /// <summary>
-    /// Register dependencies for business layer
+    ///     Register dependencies for business layer
     /// </summary>
     public class AutofacBusinessModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
             var assembly = Assembly.GetExecutingAssembly();
+            builder.RegisterType<EfProductRepository>().As<IProductRepository>().SingleInstance();
+
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()
                 .AsClosedTypesOf(typeof(IRequestHandler<,>));
             builder

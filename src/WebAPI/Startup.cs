@@ -7,11 +7,14 @@ using Core.Extensions;
 using Core.Settings;
 using Core.Utilities.Encryption;
 using Core.Utilities.IoC;
+using Core.Utilities.Uri;
 using DataAccess.Concrete.EntityFramework.Contexts;
+using DataAccess.DependencyResolvers;
 using Entities.Concrete;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,18 +45,17 @@ namespace WebAPI
             });
             services.AddDependencyResolvers(new ICoreModule[]
             {
-                new CoreModule()
+                new CoreModule(),
+                new DataAccessModule()
             });
+
             services.Configure<MongoDbConfiguration>(
                 Configuration.GetSection(nameof(MongoDbConfiguration)));
             services.AddSingleton<IMongoDbConfiguration>(sp =>
                 sp.GetRequiredService<IOptions<MongoDbConfiguration>>().Value);
 
             services.AddAutoMapper(typeof(AutoMapperHelper));
-            services.AddTransient<FileLogger>();
-            services.AddTransient<MongoDbLogger>();
-            services.AddTransient<ElasticsearchLogger>();
-            services.AddDbContext<IdentityContext>();
+            
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<IdentityContext>()
                 .AddDefaultTokenProviders();
             services.Configure<FileLogConfiguration>(
@@ -65,7 +67,7 @@ namespace WebAPI
                 options.Password.RequiredLength = 8;
                 options.SignIn.RequireConfirmedEmail = true;
             });
-
+         
             services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

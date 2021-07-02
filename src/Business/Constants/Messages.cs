@@ -1,7 +1,7 @@
 ﻿namespace Business.Constants
 {
     /// <summary>
-    /// Messages for responses
+    ///     Messages for responses
     /// </summary>
     public static class Messages
     {
@@ -20,7 +20,10 @@
         public const string ForgotPasswordFailed = "Forgot password failed!";
         public const string SentForgotPasswordEmailSuccessfully = "Sent forgot password email successfully.";
         public const string EmailIsNotConfirmed = "Email is not confirmed!";
-        public const string SignUpSuccessfully = "Sign up successfully. Please confirm your account by visiting this URL: ";
+
+        public const string SignUpSuccessfully =
+            "Sign up successfully. Please confirm your account by visiting this URL: ";
+
         public const string TokenCreatedSuccessfully = "Token created successfully.";
         public const string FailedToCreateToken = "Failed to create token!";
         public const string EmailSuccessfullyConfirmed = "Email successfully confirmed.";

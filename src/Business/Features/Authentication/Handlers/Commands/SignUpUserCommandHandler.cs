@@ -25,7 +25,7 @@ using Microsoft.Extensions.Configuration;
 namespace Business.Features.Authentication.Handlers.Commands
 {
     /// <summary>
-    /// Sign up for user
+    ///     Sign up for user
     /// </summary>
     [TransactionScopeAspectAsync]
     public class SignUpUserCommandHandler : IRequestHandler<SignUpUserCommand, IDataResult<SignUpResponse>>
@@ -45,7 +45,7 @@ namespace Business.Features.Authentication.Handlers.Commands
         }
 
         /// <summary>
-        /// Create a new user with user role
+        ///     Create a new user with user role
         /// </summary>
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
@@ -81,14 +81,14 @@ namespace Business.Features.Authentication.Handlers.Commands
             var verificationUri = await SendVerificationEmail(user);
             return new SuccessDataResult<SignUpResponse>(new SignUpResponse
             {
-                Id=user.Id,
+                Id = user.Id,
                 Email = user.Email,
                 UserName = user.UserName
             }, Messages.SignUpSuccessfully + verificationUri);
         }
 
         /// <summary>
-        /// Send verification email 
+        ///     Send verification email
         /// </summary>
         /// <param name="user"></param>
         /// <returns>Verification url</returns>
@@ -97,12 +97,12 @@ namespace Business.Features.Authentication.Handlers.Commands
             // Generate token for confirm email
             var verificationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             verificationToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(verificationToken));
-            
+
             // Generate endpoint url for verification url
             var endPointUrl =
                 new Uri(string.Concat($"{_config.GetSection("BaseUrl").Value}", "api/account/confirm-email/"));
             var verificationUrl = QueryHelpers.AddQueryString(endPointUrl.ToString(), "userId", user.Id);
-            
+
             // Edit forgot password email template for reset password link
             var emailTemplatePath = Path.Combine(Environment.CurrentDirectory,
                 @"MailTemplates\SendVerificationEmailTemplate.html");

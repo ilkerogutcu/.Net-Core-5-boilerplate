@@ -11,7 +11,7 @@ namespace Core.DataAccess
         T Add(T entity);
         T Update(T entity);
         void Delete(T entity);
-        IEnumerable<T> GetList(Expression<Func<T, bool>> expression = null);
+        List<T> GetList(Expression<Func<T, bool>> expression = null);
         T Get(Expression<Func<T, bool>> expression);
         int SaveChanges();
         int GetCount(Expression<Func<T, bool>> expression = null);
@@ -23,7 +23,7 @@ namespace Core.DataAccess
 
         Task<T> AddAsync(T entity);
         Task<int> SaveChangesAsync();
-        Task<IEnumerable<T>> GetListAsync(Expression<Func<T, bool>> expression = null);
+        Task<List<T>> GetListAsync(Expression<Func<T, bool>> expression = null);
         Task<T> GetAsync(Expression<Func<T, bool>> expression);
         Task<int> GetCountAsync(Expression<Func<T, bool>> expression = null);
     }
