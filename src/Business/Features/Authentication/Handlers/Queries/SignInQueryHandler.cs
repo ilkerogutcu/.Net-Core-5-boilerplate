@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Business.Constants;
-using Business.Features.Authentication.Commands;
+using Business.Features.Authentication.Queries;
 using Core.Aspects.Autofac.Logger;
 using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using Core.Entities.DTOs.Authentication.Responses;
@@ -18,28 +18,23 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Business.Features.Authentication.Handlers.Commands
+namespace Business.Features.Authentication.Handlers.Queries
 {
-    /// <summary>
-    ///     Sign in
-    /// </summary>
-    public class SignInCommandHandler : IRequestHandler<SignInCommand, IDataResult<SignInResponse>>
+    public class SignInQueryHandler : IRequestHandler<SignInQuery, IDataResult<SignInResponse>>
     {
         private readonly IConfiguration _configuration;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public SignInCommandHandler(UserManager<ApplicationUser> userManager,
+        public SignInQueryHandler(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager, IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
         }
-
         [LogAspect(typeof(FileLogger))]
-        public async Task<IDataResult<SignInResponse>> Handle(SignInCommand request,
-            CancellationToken cancellationToken)
+        public async Task<IDataResult<SignInResponse>> Handle(SignInQuery request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByNameAsync(request.Username);
             if (user is null) return new ErrorDataResult<SignInResponse>(Messages.UserNotFound);
@@ -61,7 +56,6 @@ namespace Business.Features.Authentication.Handlers.Commands
                 JwtToken = new JwtSecurityTokenHandler().WriteToken(token)
             }, Messages.SignInSuccessfully);
         }
-
         private async Task<JwtSecurityToken> GenerateJwtToken(ApplicationUser user)
         {
             var userClaims = await _userManager.GetClaimsAsync(user);

@@ -33,9 +33,9 @@ namespace WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SignInResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("sign-in")]
-        public async Task<IActionResult> SignIn(SignInCommand command)
+        public async Task<IActionResult> SignIn(SignInQuery query)
         {
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(query);
             return result.Success ? Ok(result.Data) : BadRequest(result.Message);
         }
 

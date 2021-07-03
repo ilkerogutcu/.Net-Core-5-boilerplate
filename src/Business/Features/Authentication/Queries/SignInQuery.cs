@@ -2,9 +2,9 @@
 using Core.Utilities.Results;
 using MediatR;
 
-namespace Business.Features.Authentication.Commands
+namespace Business.Features.Authentication.Queries
 {
-    public class SignInCommand : IRequest<IDataResult<SignInResponse>>
+    public class SignInQuery : IRequest<IDataResult<SignInResponse>>
     {
         /// <summary>
         ///     Username
