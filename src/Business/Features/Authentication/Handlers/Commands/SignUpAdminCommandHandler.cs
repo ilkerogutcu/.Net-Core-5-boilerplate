@@ -24,32 +24,24 @@ using Microsoft.Extensions.Configuration;
 
 namespace Business.Features.Authentication.Handlers.Commands
 {
-    /// <summary>
-    ///     Sign up for user
-    /// </summary>
     [TransactionScopeAspectAsync]
-    public class SignUpUserCommandHandler : IRequestHandler<SignUpUserCommand, IDataResult<SignUpResponse>>
+    public class SignUpAdminCommandHandler : IRequestHandler<SignUpUserCommand, IDataResult<SignUpResponse>>
     {
         private readonly IConfiguration _config;
         private readonly IMailService _mailService;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public SignUpUserCommandHandler(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager,
-            IMailService mailService, IConfiguration config)
+
+        public SignUpAdminCommandHandler(IConfiguration config, IMailService mailService,
+            RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _mailService = mailService;
             _config = config;
+            _mailService = mailService;
+            _roleManager = roleManager;
+            _userManager = userManager;
         }
 
-        /// <summary>
-        ///     Create a new user with user role
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
         [ValidationAspect(typeof(SignUpValidator))]
         [LogAspect(typeof(FileLogger))]
         public async Task<IDataResult<SignUpResponse>> Handle(SignUpUserCommand request,
@@ -57,11 +49,14 @@ namespace Business.Features.Authentication.Handlers.Commands
         {
             var isUserAlreadyExist = await _userManager.FindByNameAsync(request.SignUpRequest.Username);
             if (isUserAlreadyExist is not null)
+            {
                 return new ErrorDataResult<SignUpResponse>(Messages.UsernameAlreadyExist);
-
+            }
             var isEmailAlreadyExist = await _userManager.FindByEmailAsync(request.SignUpRequest.Username);
-            if (isEmailAlreadyExist is not null) return new ErrorDataResult<SignUpResponse>(Messages.EmailAlreadyExist);
-
+            if (isEmailAlreadyExist is not null)
+            {
+                return new ErrorDataResult<SignUpResponse>(Messages.EmailAlreadyExist);
+            }
             var user = new ApplicationUser
             {
                 UserName = request.SignUpRequest.Username,
@@ -71,13 +66,15 @@ namespace Business.Features.Authentication.Handlers.Commands
             };
             var result = await _userManager.CreateAsync(user, request.SignUpRequest.Password);
             if (!result.Succeeded)
+            {
                 return new ErrorDataResult<SignUpResponse>(Messages.SignUpFailed +
                                                            $":{result.Errors.ToList()[0].Description}");
-
-            if (!await _roleManager.RoleExistsAsync(Roles.User.ToString()))
-                await _roleManager.CreateAsync(new IdentityRole(Roles.User.ToString()));
-
-            await _userManager.AddToRoleAsync(user, Roles.User.ToString());
+            }
+            if (!await _roleManager.RoleExistsAsync(Roles.Admin.ToString()))
+            {
+                await _roleManager.CreateAsync(new IdentityRole(Roles.Admin.ToString()));
+            }
+            await _userManager.AddToRoleAsync(user, Roles.Admin.ToString());
             var verificationUri = await SendVerificationEmail(user);
             return new SuccessDataResult<SignUpResponse>(new SignUpResponse
             {
@@ -86,7 +83,6 @@ namespace Business.Features.Authentication.Handlers.Commands
                 UserName = user.UserName
             }, Messages.SignUpSuccessfully + verificationUri);
         }
-
         /// <summary>
         ///     Send verification email
         /// </summary>
