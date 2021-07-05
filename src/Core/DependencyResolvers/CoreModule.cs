@@ -1,4 +1,5 @@
-﻿using Core.CrossCuttingConcerns.Caching;
+﻿using System.Diagnostics;
+using Core.CrossCuttingConcerns.Caching;
 using Core.CrossCuttingConcerns.Caching.Microsoft;
 using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using Core.Utilities.IoC;
@@ -18,6 +19,7 @@ namespace Core.DependencyResolvers
             serviceCollection.AddSingleton<ICacheManager, MemoryCacheManager>();
             serviceCollection.AddSingleton<IMailService, MailService>();
             serviceCollection.AddSingleton<IUriService, UriManager>();
+            serviceCollection.AddSingleton<Stopwatch>();
             serviceCollection.AddTransient<FileLogger>();
             serviceCollection.AddTransient<MongoDbLogger>();
             serviceCollection.AddHttpContextAccessor();
@@ -26,7 +28,7 @@ namespace Core.DependencyResolvers
             {
                 var accessor = o.GetRequiredService<IHttpContextAccessor>();
                 var request = accessor.HttpContext?.Request;
-                var uri = string.Concat(request?.Scheme, "://", request?.Host.ToUriComponent());
+                var uri = string.Concat(request?.Scheme, "://", request?.Host.ToUriComponent(), request?.PathBase);
                 return new UriManager(uri);
             });
         }

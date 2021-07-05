@@ -23,6 +23,7 @@
 
         public const string SignUpSuccessfully =
             "Sign up successfully. Please confirm your account by visiting this URL: ";
+        public const string DataNotFound = "Token created successfully.";
 
         public const string TokenCreatedSuccessfully = "Token created successfully.";
         public const string FailedToCreateToken = "Failed to create token!";

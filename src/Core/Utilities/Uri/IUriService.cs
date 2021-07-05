@@ -1,9 +1,9 @@
-﻿using Core.Utilities.Pagination;
-
-namespace Core.Utilities.Uri
+﻿namespace Core.Utilities.Uri
 {
+    using Core.Entities.Concrete;
+
     public interface IUriService
     {
-        System.Uri GetPageUri(PaginationFilter filter, string route);
+        System.Uri GeneratePageRequestUri(PaginationFilter filter, string route);
     }
 }

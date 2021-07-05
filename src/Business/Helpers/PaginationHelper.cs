@@ -1,42 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using Core.Utilities.Pagination;
-using Core.Utilities.Results;
-using Core.Utilities.Uri;
-
-namespace Business.Helpers
+﻿namespace Business.Helpers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Core.Entities.Concrete;
+    using Core.Utilities.Results;
+    using Core.Utilities.Uri;
+
     public static class PaginationHelper
     {
-        public static PagedResponse<List<T>> CreatePagedResponse<T>(List<T> pagedData, PaginationFilter validFilter,
-            int totalRecords, IUriService uriService, string route)
+        /// <summary>
+        /// Create paginated response
+        /// </summary>
+        /// <param name="data"></param> 
+        /// <param name="paginationFilter"></param>
+        /// <param name="totalRecords"></param>
+        /// <param name="uriService"></param>
+        /// <param name="route"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>Paginated result</returns>
+        public static PaginatedResult<IEnumerable<T>> CreatePaginatedResponse<T>(IEnumerable<T> data, PaginationFilter paginationFilter, int totalRecords, IUriService uriService, string route)
         {
-            var roundedTotalPages = 0;
-            var response = new PagedResponse<List<T>>(pagedData, validFilter.PageNumber, validFilter.PageSize);
-            var totalPages = totalRecords / (double) validFilter.PageSize;
-            if (validFilter.PageNumber <= 0 || validFilter.PageSize <= 0)
+            data = data.Skip((paginationFilter.PageNumber - 1) * paginationFilter.PageSize)
+                .Take(paginationFilter.PageSize);
+            int roundedTotalPages;
+            var response = new PaginatedResult<IEnumerable<T>>(data, paginationFilter.PageNumber, paginationFilter.PageSize);
+            var totalPages = totalRecords / (double)paginationFilter.PageSize;
+            if (paginationFilter.PageNumber <= 0 || paginationFilter.PageSize <= 0)
             {
                 roundedTotalPages = 1;
-                validFilter.PageNumber = 1;
-                validFilter.PageSize = 1;
+                paginationFilter.PageNumber = 1;
+                paginationFilter.PageSize = 1;
             }
             else
             {
                 roundedTotalPages = Convert.ToInt32(Math.Ceiling(totalPages));
             }
-
-            response.NextPage = validFilter.PageNumber >= 1 && validFilter.PageNumber < roundedTotalPages
-                ? uriService.GetPageUri(new PaginationFilter(validFilter.PageNumber + 1, validFilter.PageSize), route)
+            response.NextPage = paginationFilter.PageNumber >= 1 && paginationFilter.PageNumber < roundedTotalPages
+                ? uriService.GeneratePageRequestUri(new PaginationFilter(paginationFilter.PageNumber + 1, paginationFilter.PageSize), route)
                 : null;
-            response.PreviousPage = validFilter.PageNumber - 1 >= 1 && validFilter.PageNumber <= roundedTotalPages
-                ? uriService.GetPageUri(new PaginationFilter(validFilter.PageNumber - 1, validFilter.PageSize), route)
+            response.PreviousPage = paginationFilter.PageNumber - 1 >= 1 && paginationFilter.PageNumber <= roundedTotalPages
+                ? uriService.GeneratePageRequestUri(new PaginationFilter(paginationFilter.PageNumber - 1, paginationFilter.PageSize), route)
                 : null;
-            response.FirstPage = uriService.GetPageUri(new PaginationFilter(1, validFilter.PageSize), route);
-            response.LastPage =
-                uriService.GetPageUri(new PaginationFilter(roundedTotalPages, validFilter.PageSize), route);
+            response.FirstPage = uriService.GeneratePageRequestUri(new PaginationFilter(1, paginationFilter.PageSize), route);
+            response.LastPage = uriService.GeneratePageRequestUri(new PaginationFilter(roundedTotalPages, paginationFilter.PageSize), route);
             response.TotalPages = roundedTotalPages;
             response.TotalRecords = totalRecords;
-
             return response;
         }
     }
