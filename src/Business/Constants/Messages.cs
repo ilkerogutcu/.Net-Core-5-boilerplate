@@ -19,6 +19,8 @@
         public const string SignUpFailed = "Sign up failed!";
         public const string ForgotPasswordFailed = "Forgot password failed!";
         public const string SentForgotPasswordEmailSuccessfully = "Sent forgot password email successfully.";
+        public const string SentConfirmationEmailSuccessfully = "Verification token has been sent to email successfully";
+
         public const string EmailIsNotConfirmed = "Email is not confirmed!";
 
         public const string SignUpSuccessfully =

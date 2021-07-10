@@ -48,6 +48,16 @@ namespace WebAPI.Controllers
             var result = await _mediator.Send(query);
             return result.Success ? Ok(result.Data) : BadRequest(result.Message);
         }
+        
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost("send-email-verification-token")]
+        public async Task<IActionResult> SendEmailConfirmationToken(SendEmailConfirmationTokenCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return result.Success ? Ok(result.Message) : BadRequest(result.Message);
+        }
 
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
