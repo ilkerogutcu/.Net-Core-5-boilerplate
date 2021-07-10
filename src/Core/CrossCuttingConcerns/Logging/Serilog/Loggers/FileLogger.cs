@@ -1,16 +1,22 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.IO;
 using Core.CrossCuttingConcerns.Logging.Serilog.ConfigurationModels;
 using Core.Utilities.IoC;
 using Core.Utilities.Messages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Serilog;
 
 namespace Core.CrossCuttingConcerns.Logging.Serilog.Loggers
 {
+    /// <summary>
+    /// File logger
+    /// </summary>
     public class FileLogger : LoggerServiceBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileLogger"/> class.
+        /// </summary>
         public FileLogger()
         {
             var configuration = ServiceTool.ServiceProvider.GetService<IConfiguration>();

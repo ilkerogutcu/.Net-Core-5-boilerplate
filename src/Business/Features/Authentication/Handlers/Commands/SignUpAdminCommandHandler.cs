@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Business.Abstract;
 using Business.Constants;
 using Business.Features.Authentication.Commands;
 using Business.Features.Authentication.ValidationRules;
@@ -25,27 +26,22 @@ using Microsoft.Extensions.Configuration;
 namespace Business.Features.Authentication.Handlers.Commands
 {
     [TransactionScopeAspectAsync]
-    public class SignUpAdminCommandHandler : IRequestHandler<SignUpUserCommand, IDataResult<SignUpResponse>>
+    public class SignUpAdminCommandHandler : IRequestHandler<SignUpAdminCommand, IDataResult<SignUpResponse>>
     {
-        private readonly IConfiguration _config;
-        private readonly IMailService _mailService;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
+        private IAuthenticationMailService _authenticationMailService;
 
-
-        public SignUpAdminCommandHandler(IConfiguration config, IMailService mailService,
-            RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
+        public SignUpAdminCommandHandler(IMailService mailService, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IAuthenticationMailService authenticationMailService)
         {
-            _config = config;
-            _mailService = mailService;
             _roleManager = roleManager;
             _userManager = userManager;
+            _authenticationMailService = authenticationMailService;
         }
 
         [ValidationAspect(typeof(SignUpValidator))]
         [LogAspect(typeof(FileLogger))]
-        public async Task<IDataResult<SignUpResponse>> Handle(SignUpUserCommand request,
-            CancellationToken cancellationToken)
+        public async Task<IDataResult<SignUpResponse>> Handle(SignUpAdminCommand request, CancellationToken cancellationToken)
         {
             var isUserAlreadyExist = await _userManager.FindByNameAsync(request.SignUpRequest.Username);
             if (isUserAlreadyExist is not null)
@@ -75,46 +71,14 @@ namespace Business.Features.Authentication.Handlers.Commands
                 await _roleManager.CreateAsync(new IdentityRole(Roles.Admin.ToString()));
             }
             await _userManager.AddToRoleAsync(user, Roles.Admin.ToString());
-            var verificationUri = await SendVerificationEmail(user);
+            var verificationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var verificationUri = await _authenticationMailService.SendVerificationEmail(user,verificationToken);
             return new SuccessDataResult<SignUpResponse>(new SignUpResponse
             {
                 Id = user.Id,
                 Email = user.Email,
                 UserName = user.UserName
             }, Messages.SignUpSuccessfully + verificationUri);
-        }
-        /// <summary>
-        ///     Send verification email
-        /// </summary>
-        /// <param name="user"></param>
-        /// <returns>Verification url</returns>
-        private async Task<string> SendVerificationEmail(ApplicationUser user)
-        {
-            // Generate token for confirm email
-            var verificationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            verificationToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(verificationToken));
-
-            // Generate endpoint url for verification url
-            var endPointUrl =
-                new Uri(string.Concat($"{_config.GetSection("BaseUrl").Value}", "api/account/confirm-email/"));
-            var verificationUrl = QueryHelpers.AddQueryString(endPointUrl.ToString(), "userId", user.Id);
-
-            // Edit forgot password email template for reset password link
-            var emailTemplatePath = Path.Combine(Environment.CurrentDirectory,
-                @"MailTemplates\SendVerificationEmailTemplate.html");
-            using (var reader = new StreamReader(emailTemplatePath))
-            {
-                var mailTemplate = await reader.ReadToEndAsync();
-                reader.Close();
-                await _mailService.SendEmailAsync(new MailRequest
-                {
-                    ToEmail = user.Email,
-                    Subject = "Please verification your email",
-                    Body = mailTemplate.Replace("[verificationUrl]", verificationUrl)
-                });
-            }
-
-            return QueryHelpers.AddQueryString(verificationUrl, "verificationToken", verificationToken);
         }
     }
 }

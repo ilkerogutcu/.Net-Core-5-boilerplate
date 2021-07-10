@@ -22,7 +22,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using MongoDbConfiguration = Core.DataAccess.MongoDb.Configuration.MongoDbConfiguration;
 
 namespace WebAPI
 {
@@ -48,19 +47,10 @@ namespace WebAPI
                 new CoreModule(),
                 new DataAccessModule()
             });
-
-            services.Configure<MongoDbConfiguration>(
-                Configuration.GetSection(nameof(MongoDbConfiguration)));
-            services.AddSingleton<IMongoDbConfiguration>(sp =>
-                sp.GetRequiredService<IOptions<MongoDbConfiguration>>().Value);
-
-            services.AddAutoMapper(typeof(AutoMapperHelper));
             
-            services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<IdentityContext>()
-                .AddDefaultTokenProviders();
-            services.Configure<FileLogConfiguration>(
-                Configuration.GetSection("SeriLogConfigurations:FileLogConfiguration"));
-            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
+            services.AddAutoMapper(typeof(AutoMapperHelper));
+            services.AddIdentity<ApplicationUser, IdentityRole>().
+                AddEntityFrameworkStores<IdentityContext>().AddDefaultTokenProviders();
             services.Configure<IdentityOptions>(options =>
             {
                 options.User.RequireUniqueEmail = true;

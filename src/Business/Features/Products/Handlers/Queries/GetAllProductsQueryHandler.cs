@@ -38,11 +38,11 @@ namespace Business.Features.Products.Handlers.Queries
             CancellationToken cancellationToken)
         {
             var result = await _productRepository.GetListAsync();
-            
             if (result == null)
             {
                 return new ErrorDataResult<IEnumerable<ProductDto>>(Messages.DataNotFound);
             }
+            
             var resultMapped = _mapper.Map<List<ProductDto>>(result);
             var totalRecord = await _productRepository.GetCountAsync();
             return PaginationHelper.CreatePaginatedResponse(resultMapped, request.PaginationFilter, totalRecord, _uriService, request.Route);

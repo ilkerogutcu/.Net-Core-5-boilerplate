@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using Autofac;
 using Autofac.Extras.DynamicProxy;
+using Business.Abstract;
+using Business.Concrete;
 using Castle.DynamicProxy;
 using Core.Utilities.Interceptors;
 using DataAccess.Abstract;
@@ -19,6 +21,7 @@ namespace Business.DependencyResolvers
         {
             var assembly = Assembly.GetExecutingAssembly();
             builder.RegisterType<EfProductRepository>().As<IProductRepository>().SingleInstance();
+            builder.RegisterType<AuthenticationMailManager>().As<IAuthenticationMailService>().SingleInstance();
 
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()
                 .AsClosedTypesOf(typeof(IRequestHandler<,>));

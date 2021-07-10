@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Core.CrossCuttingConcerns.Logging.Serilog.ConfigurationModels;
 using Core.DataAccess.MongoDb.Configuration;
 using Core.Entities.MongoDb;
+using Core.Utilities.IoC;
 using Core.Utilities.Messages;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -17,19 +21,21 @@ namespace Core.DataAccess.MongoDb
         private readonly IMongoCollection<T> _collection;
         private string CollectionName { get; }
 
-        protected MongoDbRepositoryBase(IMongoDbConfiguration settings, string collectionName)
+        protected MongoDbRepositoryBase(string collectionName)
         {
+            var configuration = ServiceTool.ServiceProvider.GetService<IConfiguration>();
+            var config = configuration.GetSection("MongoDatabaseConfig").Get<MongoDatabaseConfig>();
             CollectionName = collectionName;
-            ConnectionSettingControl(settings);
-            var client = new MongoClient(settings.ConnectionString);
-            var database = client.GetDatabase(settings.DatabaseName);
+            ConnectionSettingControl(config);
+            var client = new MongoClient(config.ConnectionString);
+            var database = client.GetDatabase(config.DatabaseName);
             _collection = database.GetCollection<T>(collectionName);
         }
 
-        private void ConnectionSettingControl(IMongoDbConfiguration settings)
+        private void ConnectionSettingControl(MongoDatabaseConfig config)
         {
-            if (settings != null &&
-                (string.IsNullOrEmpty(CollectionName) || string.IsNullOrEmpty(settings.DatabaseName)))
+            if (config != null &&
+                (string.IsNullOrEmpty(CollectionName) || string.IsNullOrEmpty(config.DatabaseName)))
                 throw new Exception(MongoDbMessages.NullOrEmptyMessage);
         }
 

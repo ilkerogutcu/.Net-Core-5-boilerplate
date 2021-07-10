@@ -35,7 +35,11 @@ namespace Business.Features.Authentication.Handlers.Commands
         public async Task<IResult> Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByIdAsync(request.UserId);
-            if (user is null) return new ErrorResult(Messages.UserNotFound);
+            if (user is null)
+            {
+                return new ErrorResult(Messages.UserNotFound);
+            }
+
             request.VerificationToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.VerificationToken));
             var result = await _userManager.ConfirmEmailAsync(user, request.VerificationToken);
             return result.Succeeded

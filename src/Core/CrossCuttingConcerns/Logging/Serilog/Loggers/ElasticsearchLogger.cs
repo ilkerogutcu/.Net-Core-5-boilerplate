@@ -10,8 +10,14 @@ using Serilog.Sinks.Elasticsearch;
 
 namespace Core.CrossCuttingConcerns.Logging.Serilog.Loggers
 {
+    /// <summary>
+    /// Elasticsearch Logger
+    /// </summary>
     public class ElasticsearchLogger : LoggerServiceBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ElasticsearchLogger"/> class.
+        /// </summary>
         public ElasticsearchLogger()
         {
             var configuration = ServiceTool.ServiceProvider.GetService<IConfiguration>();
@@ -26,7 +32,7 @@ namespace Core.CrossCuttingConcerns.Logging.Serilog.Loggers
                         CustomFormatter = new ExceptionAsObjectJsonFormatter(renderMessage: true),
                         AutoRegisterTemplate = true,
                         TemplateName = logConfig.TemplateName,
-                        IndexFormat = logConfig.IndexFormat
+                        IndexFormat = logConfig.IndexFormat,
                     })
                 .MinimumLevel.Verbose()
                 .WriteTo.Seq(logConfig.SeqConnectionString)

@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Business.Features.Products.Queries;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
-using Entities.Concrete;
 using Entities.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Http;
