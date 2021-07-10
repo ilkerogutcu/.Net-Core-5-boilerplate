@@ -20,7 +20,7 @@
         public const string ForgotPasswordFailed = "Forgot password failed!";
         public const string SentForgotPasswordEmailSuccessfully = "Sent forgot password email successfully.";
         public const string SentConfirmationEmailSuccessfully = "Verification token has been sent to email successfully";
-
+        public const string Sent2FaCodeEmailSuccessfully = "2FA code has been sent to email successfully";
         public const string EmailIsNotConfirmed = "Email is not confirmed!";
 
         public const string SignUpSuccessfully =

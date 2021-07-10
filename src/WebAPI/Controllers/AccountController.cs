@@ -2,6 +2,7 @@
 using Business.Features.Authentication.Commands;
 using Business.Features.Authentication.Queries;
 using Core.Entities.DTOs.Authentication.Responses;
+using Core.Utilities.Results;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -40,10 +41,20 @@ namespace WebAPI.Controllers
         }
 
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SignInResponse))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<SignInResponse>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("sign-in")]
         public async Task<IActionResult> SignIn(SignInQuery query)
+        {
+            var result = await _mediator.Send(query);
+            return result.Success ? Ok(result) : BadRequest(result.Message);
+        }
+        
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SignInResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost("sign-in/2FA")]
+        public async Task<IActionResult> SignInWithTwoFactorSecurity(SignInWithTwoFactorQuery query)
         {
             var result = await _mediator.Send(query);
             return result.Success ? Ok(result.Data) : BadRequest(result.Message);
@@ -84,6 +95,16 @@ namespace WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword(ResetPasswordCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return result.Success ? Ok(result.Message) : BadRequest(result.Message);
+        }
+        
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost("update-2FA")]
+        public async Task<IActionResult> UpdateTwoFactorSecurity(UpdateTwoFactorSecurityCommand command)
         {
             var result = await _mediator.Send(command);
             return result.Success ? Ok(result.Message) : BadRequest(result.Message);
