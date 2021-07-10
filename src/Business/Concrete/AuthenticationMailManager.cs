@@ -60,7 +60,6 @@ namespace Business.Concrete
         #endregion
 
         #region Send forgot password email
-
         /// <summary>
         ///     Send forgot password email
         /// </summary>
@@ -90,7 +89,24 @@ namespace Business.Concrete
                 Subject = "You have requested to reset your password",
                 Body = mailTemplate.Replace("[resetPasswordLink]", resetTokenUrl)
             });
+        }
+        #endregion
 
+        #region Send 2fa token email
+        public async Task SendTwoFactorCodeEmail(ApplicationUser user, string code)
+        {
+            // Edit forgot password email template for reset password link
+            var emailTemplatePath = Path.Combine(Environment.CurrentDirectory,
+                @"MailTemplates\Send2FAEmailTemplate.html");
+            using var reader = new StreamReader(emailTemplatePath);
+            var mailTemplate = await reader.ReadToEndAsync();
+            reader.Close();
+            await _mailService.SendEmailAsync(new MailRequest
+            {
+                ToEmail = user.Email,
+                Subject = $"Your code is {code}",
+                Body = mailTemplate.Replace("[2FACode]", code)
+            });
         }
         #endregion
 
