@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.Features.Products.Queries;
 using Business.Helpers;
@@ -11,8 +11,8 @@ using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using Core.Utilities.Results;
 using Core.Utilities.Uri;
 using DataAccess.Abstract;
-using Entities.Concrete;
 using Entities.DTOs;
+using Entities.Enums;
 using MediatR;
 
 namespace Business.Features.Products.Handlers.Queries
@@ -34,6 +34,7 @@ namespace Business.Features.Products.Handlers.Queries
         }
 
         [LogAspect(typeof(FileLogger))]
+        [SecuredOperation(Roles.Admin,Roles.Moderator,Roles.User)]
         public async Task<IDataResult<IEnumerable<ProductDto>>> Handle(GetAllProductsQuery request,
             CancellationToken cancellationToken)
         {

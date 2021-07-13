@@ -22,6 +22,7 @@
         public const string SentConfirmationEmailSuccessfully = "Verification token has been sent to email successfully";
         public const string Sent2FaCodeEmailSuccessfully = "2FA code has been sent to email successfully";
         public const string EmailIsNotConfirmed = "Email is not confirmed!";
+        public const string AuthorizationsDenied = "Authorizations denied!";
 
         public const string SignUpSuccessfully =
             "Sign up successfully. Please confirm your account by visiting this URL: ";
