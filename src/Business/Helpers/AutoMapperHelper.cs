@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using AutoMapper;
+﻿using AutoMapper;
 using Core.Entities.DTOs.Authentication.Responses;
 using Entities.Concrete;
 using Entities.DTOs;

@@ -1,11 +1,16 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.CrossCuttingConcerns.Logging.Serilog.ConfigurationModels;
 using Core.Entities.Mail;
 using Core.Settings;
+using Core.Utilities.IoC;
+using Core.Utilities.Messages;
 using MailKit.Net.Smtp;
 using MailKit.Security;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using MimeKit;
 
 namespace Core.Utilities.Mail
@@ -14,9 +19,10 @@ namespace Core.Utilities.Mail
     {
         private readonly MailSettings _mailSettings;
 
-        public MailService(IOptions<MailSettings> mailSettings)
+        public MailService()
         {
-            _mailSettings = mailSettings.Value;
+            var configuration = ServiceTool.ServiceProvider.GetService<IConfiguration>();
+            _mailSettings = configuration.GetSection("MailSettings").Get<MailSettings>();
         }
 
         public async Task SendEmailAsync(MailRequest mailRequest)
@@ -31,6 +37,7 @@ namespace Core.Utilities.Mail
             var builder = new BodyBuilder();
 
             if (mailRequest.Attachments != null)
+            {
                 foreach (var file in mailRequest.Attachments.Where(file => file.Length > 0))
                 {
                     byte[] fileBytes;
@@ -42,6 +49,7 @@ namespace Core.Utilities.Mail
 
                     builder.Attachments.Add(file.FileName, fileBytes, ContentType.Parse(file.ContentType));
                 }
+            }
 
             builder.HtmlBody = mailRequest.Body;
             email.Body = builder.ToMessageBody();
