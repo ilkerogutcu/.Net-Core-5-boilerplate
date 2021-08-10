@@ -46,19 +46,6 @@ namespace Core.Aspects.Autofac.Logger
             var result = GetLogDetail(invocation);
             _loggerServiceBase.Info($"OnBefore: {result}");
         }
-
-        /// <summary>
-        /// Logging on exception
-        /// </summary>
-        /// <param name="invocation">invocation.</param>
-        /// <param name="e">Exception.</param>
-        protected override void OnException(IInvocation invocation, Exception e)
-        {
-            var result = GetLogDetailWithException(invocation, e);
-            _loggerServiceBase.Error(
-                $"OnException {result}");
-        }
-
         /// <summary>
         /// Logging on success
         /// </summary>
@@ -84,31 +71,7 @@ namespace Core.Aspects.Autofac.Logger
                 ReturnValue = invocation.ReturnValue,
             }).ToList();
         }
-
-        /// <summary>
-       /// Get log detail with exception
-       /// </summary>
-       /// <param name="invocation">invocation.</param>
-       /// <param name="e">Exception.</param>
-       /// <returns>Serialized exception details.</returns>
-        private string GetLogDetailWithException(IInvocation invocation, Exception e)
-        {
-            var logParameters = GetLogParameters(invocation);
-            var logDetail = new LogDetailWithException
-            {
-                FullName = invocation.Method.ToString(),
-                MethodName = invocation.Method.Name,
-                Parameters = logParameters,
-                User = _httpContextAccessor.HttpContext?.User.Identity?.Name ?? "?",
-                ExceptionMessage = e.Message,
-            };
-            return JsonConvert.SerializeObject(logDetail, Formatting.None, new JsonSerializerSettings
-                {
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                    DateFormatHandling = DateFormatHandling.IsoDateFormat,
-                });
-        }
-
+        
         private string GetLogDetail(IInvocation invocation)
         {
             var logParameters = GetLogParameters(invocation);

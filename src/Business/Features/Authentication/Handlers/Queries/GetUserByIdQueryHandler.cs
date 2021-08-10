@@ -31,8 +31,11 @@ namespace Business.Features.Authentication.Handlers.Queries
         public async Task<IDataResult<UserResponse>> Handle(GetUserByIdQuery request,
             CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByIdAsync(request.Id);
-            if (user is null) return new ErrorDataResult<UserResponse>(Messages.UserNotFound);
+            var user = await _userManager.FindByIdAsync(request.Id.ToString());
+            if(user is null)
+            {
+                return new ErrorDataResult<UserResponse>(Messages.UserNotFound);
+            }
 
             var userResponse = _mapper.Map<UserResponse>(user);
             return new SuccessDataResult<UserResponse>(userResponse);

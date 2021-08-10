@@ -7,6 +7,7 @@ using Castle.DynamicProxy;
 using Core.Utilities.Interceptors;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
+using FluentValidation;
 using MediatR;
 using Module = Autofac.Module;
 
@@ -25,6 +26,8 @@ namespace Business.DependencyResolvers
 
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()
                 .AsClosedTypesOf(typeof(IRequestHandler<,>));
+            builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()
+                .AsClosedTypesOf(typeof(IValidator<>));
             builder
                 .RegisterType<Mediator>()
                 .As<IMediator>()

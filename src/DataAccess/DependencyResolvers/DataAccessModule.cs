@@ -4,13 +4,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DataAccess.DependencyResolvers
 {
-
     public class DataAccessModule : ICoreModule
     {
         public void Load(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddDbContext<IdentityContext>();
-            serviceCollection.AddDbContext<ProjectDbContext>();
+            serviceCollection.AddDbContext<ApplicationDbContext>();
         }
     }
 }

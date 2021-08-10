@@ -1,3 +1,4 @@
+using System;
 using Business.Helpers;
 using Core.CrossCuttingConcerns.Logging.Serilog.ConfigurationModels;
 using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
@@ -79,12 +80,15 @@ namespace WebAPI
             
             services.AddAutoMapper(typeof(AutoMapperHelper));
             services.AddIdentity<ApplicationUser, IdentityRole>().
-                AddEntityFrameworkStores<IdentityContext>().AddDefaultTokenProviders();
+                AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
             services.Configure<IdentityOptions>(options =>
             {
                 options.User.RequireUniqueEmail = true;
                 options.Password.RequiredLength = 8;
                 options.SignIn.RequireConfirmedEmail = true;
+                options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
+                options.Lockout.MaxFailedAccessAttempts = 5; 
             });
          
             services.AddAuthentication(options =>
@@ -119,6 +123,7 @@ namespace WebAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseStatusCodePages();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "StarterProject.WebAPI v1"));
             }
@@ -130,7 +135,6 @@ namespace WebAPI
             //Authentication comes before Authorization.
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }

@@ -5,7 +5,7 @@ namespace Entities.Concrete
 {
     public class Product:IEntity
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; init; }
         public string Name { get; set; }
         public string CategoryName { get; set; }
         public decimal Price { get; set; }

@@ -5,9 +5,9 @@ using Entities.Concrete;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfProductRepository: EfEntityRepositoryBase<Product, ProjectDbContext>, IProductRepository
+    public class EfProductRepository: EfEntityRepositoryBase<Product, ApplicationDbContext>, IProductRepository
     {
-        public EfProductRepository(ProjectDbContext context) : base(context)
+        public EfProductRepository(ApplicationDbContext context) : base(context)
         {
         }
     }

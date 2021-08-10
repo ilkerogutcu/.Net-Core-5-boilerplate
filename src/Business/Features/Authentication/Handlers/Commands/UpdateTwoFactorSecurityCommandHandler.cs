@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Business.Constants;
 using Business.Features.Authentication.Commands;
+using Core.Aspects.Autofac.Exception;
 using Core.Aspects.Autofac.Logger;
 using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using Core.Utilities.Results;
@@ -21,6 +22,7 @@ namespace Business.Features.Authentication.Handlers.Commands
         }
 
         [LogAspect(typeof(FileLogger))]
+        [ExceptionLogAspect(typeof(FileLogger))]
         public async Task<IResult> Handle(UpdateTwoFactorSecurityCommand request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByIdAsync(request.userId);
