@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Business.Features.Authentication.Commands;
 using Business.Features.Authentication.Queries;
 using Core.Entities.DTOs.Authentication.Responses;
@@ -21,6 +22,42 @@ namespace WebAPI.Controllers
         }
 
         [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetUserById(Guid id)
+        {
+            var result = await _mediator.Send(new GetUserByIdQuery
+            {
+                Id = id
+            });
+            return result.Success ? Ok(result.Data) : BadRequest(result.Message);
+        }
+
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpGet("{username}")]
+        public async Task<IActionResult> GetUserByUsername(string username)
+        {
+            var result = await _mediator.Send(new GetUserByUsernameQuery
+            {
+                Username = username
+            });
+            return result.Success ? Ok(result.Data) : BadRequest(result.Message);
+        }
+
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpGet("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail([FromQuery] ConfirmEmailCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return result.Success ? Ok(result.Message) : BadRequest(result.Message);
+        }
+
+        [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SignUpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("sign-up")]
@@ -29,7 +66,7 @@ namespace WebAPI.Controllers
             var result = await _mediator.Send(command);
             return result.Success ? Ok(result.Data) : BadRequest(result.Message);
         }
-        
+
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SignUpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
@@ -49,7 +86,7 @@ namespace WebAPI.Controllers
             var result = await _mediator.Send(query);
             return result.Success ? Ok(result) : BadRequest(result.Message);
         }
-        
+
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SignInResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
@@ -59,22 +96,12 @@ namespace WebAPI.Controllers
             var result = await _mediator.Send(query);
             return result.Success ? Ok(result.Data) : BadRequest(result.Message);
         }
-        
+
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("send-email-verification-token")]
         public async Task<IActionResult> SendEmailConfirmationToken(SendEmailConfirmationTokenCommand command)
-        {
-            var result = await _mediator.Send(command);
-            return result.Success ? Ok(result.Message) : BadRequest(result.Message);
-        }
-
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpGet("confirm-email")]
-        public async Task<IActionResult> ConfirmEmail([FromQuery] ConfirmEmailCommand command)
         {
             var result = await _mediator.Send(command);
             return result.Success ? Ok(result.Message) : BadRequest(result.Message);
@@ -99,7 +126,7 @@ namespace WebAPI.Controllers
             var result = await _mediator.Send(command);
             return result.Success ? Ok(result.Message) : BadRequest(result.Message);
         }
-        
+
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
@@ -108,36 +135,6 @@ namespace WebAPI.Controllers
         {
             var result = await _mediator.Send(command);
             return result.Success ? Ok(result.Message) : BadRequest(result.Message);
-        }
-
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpPost("get-by-id")]
-        public async Task<IActionResult> GetUserById([FromBody] GetUserByIdQuery query)
-        {
-            var result = await _mediator.Send(query);
-            return result.Success ? Ok(result.Data) : BadRequest(result.Message);
-        }
-
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpPost("get-by-username")]
-        public async Task<IActionResult> GetUserByUsername([FromBody] GetUserByUsernameQuery query)
-        {
-            var result = await _mediator.Send(query);
-            return result.Success ? Ok(result.Data) : BadRequest(result.Message);
-        }
-
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpPost("get-by-email")]
-        public async Task<IActionResult> GetUserByEmail([FromBody] GetUserByEmailQuery query)
-        {
-            var result = await _mediator.Send(query);
-            return result.Success ? Ok(result.Data) : BadRequest(result.Message);
         }
     }
 }
