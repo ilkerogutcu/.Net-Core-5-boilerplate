@@ -9,7 +9,7 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=DESKTOP-9JI7HVR;Database=StarterProject;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer("Server=DESKTOP-Q07SH9M;Database=BoilerPlate;Trusted_Connection=True;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

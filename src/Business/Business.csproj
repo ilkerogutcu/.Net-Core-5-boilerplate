@@ -5,25 +5,26 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Autofac" Version="6.2.0" />
-      <PackageReference Include="Autofac.Extras.DynamicProxy" Version="6.0.0" />
-      <PackageReference Include="AutoMapper" Version="10.1.1" />
-      <PackageReference Include="MediatR" Version="9.0.0" />
-      <PackageReference Include="MediatR.Extensions.Autofac.DependencyInjection" Version="7.2.0" />
-      <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
-      <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="5.0.7" />
-      <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="5.0.7" />
-
+        <PackageReference Include="Autofac" Version="6.2.0" />
+        <PackageReference Include="Autofac.Extras.DynamicProxy" Version="6.0.0" />
+        <PackageReference Include="AutoMapper" Version="10.1.1" />
+        <PackageReference Include="FluentValidation" Version="10.3.1" />
+        <PackageReference Include="MediatR" Version="9.0.0" />
+        <PackageReference Include="MediatR.Extensions.Autofac.DependencyInjection" Version="7.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="5.0.9" />
+        <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="5.0.9" />
+        <PackageReference Include="Moq" Version="4.16.1" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Core\Core.csproj" />
-      <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
-      <ProjectReference Include="..\Entities\Entities.csproj" />
+        <ProjectReference Include="..\Core\Core.csproj" />
+        <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
+        <ProjectReference Include="..\Entities\Entities.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="Concrete\AuthenticationManager.cs" />
+        <Compile Remove="Concrete\AuthenticationManager.cs" />
     </ItemGroup>
 
 </Project>

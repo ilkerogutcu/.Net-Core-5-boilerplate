@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -18,6 +19,9 @@ using Entities.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Moq;
 
 namespace Business.Features.Authentication.Handlers.Commands
 {
@@ -27,17 +31,24 @@ namespace Business.Features.Authentication.Handlers.Commands
     [TransactionScopeAspectAsync]
     public class SignUpUserCommandHandler : IRequestHandler<SignUpUserCommand, IDataResult<SignUpResponse>>
     {
-        private readonly IConfiguration _config;
         private readonly IAuthenticationMailService _authenticationMailService;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
 
-        public SignUpUserCommandHandler(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration config, IMapper mapper, IAuthenticationMailService authenticationMailService)
-        {
-            _userManager = userManager;
+        public SignUpUserCommandHandler(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager,
+            IMapper mapper, IAuthenticationMailService authenticationMailService)
+        {    var mockUserStore = new Mock<IUserStore<ApplicationUser>>();
+            _userManager = new UserManager<ApplicationUser>(mockUserStore.Object,
+                new Mock<IOptions<IdentityOptions>>().Object,
+                new Mock<IPasswordHasher<ApplicationUser>>().Object,
+                new IUserValidator<ApplicationUser>[0],
+                new IPasswordValidator<ApplicationUser>[0],
+                new Mock<ILookupNormalizer>().Object,
+                new Mock<IdentityErrorDescriber>().Object,
+                new Mock<IServiceProvider>().Object,
+                new Mock<ILogger<UserManager<ApplicationUser>>>().Object);
             _roleManager = roleManager;
-            _config = config;
             _mapper = mapper;
             _authenticationMailService = authenticationMailService;
         }
@@ -74,7 +85,7 @@ namespace Business.Features.Authentication.Handlers.Commands
                 await _roleManager.CreateAsync(new IdentityRole(Roles.User.ToString()));
             }
 
-            await _userManager.AddToRoleAsync(user, Roles.User.ToString());
+            var rseulee=await _userManager.AddToRoleAsync(user, Roles.User.ToString());
             var verificationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var verificationUri = await _authenticationMailService.SendVerificationEmail(user, verificationToken);
             return new SuccessDataResult<SignUpResponse>(new SignUpResponse

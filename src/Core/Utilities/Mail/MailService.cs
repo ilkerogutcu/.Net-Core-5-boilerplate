@@ -1,12 +1,9 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Core.CrossCuttingConcerns.Logging.Serilog.ConfigurationModels;
 using Core.Entities.Mail;
 using Core.Settings;
 using Core.Utilities.IoC;
-using Core.Utilities.Messages;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Configuration;

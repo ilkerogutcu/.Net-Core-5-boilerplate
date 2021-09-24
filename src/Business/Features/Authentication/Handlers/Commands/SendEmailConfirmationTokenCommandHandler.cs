@@ -7,7 +7,6 @@ using Core.Aspects.Autofac.Exception;
 using Core.Aspects.Autofac.Logger;
 using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using Core.Utilities.Results;
-using Elasticsearch.Net;
 using Entities.Concrete;
 using MediatR;
 using Microsoft.AspNetCore.Identity;

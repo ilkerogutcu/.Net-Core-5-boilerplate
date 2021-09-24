@@ -1,13 +1,17 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using Autofac;
 using Autofac.Extras.DynamicProxy;
 using Business.Abstract;
 using Business.Concrete;
 using Castle.DynamicProxy;
+using Core.Settings;
 using Core.Utilities.Interceptors;
+using Core.Utilities.MessageBrokers.RabbitMq;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using FluentValidation;
+using MassTransit;
 using MediatR;
 using Module = Autofac.Module;
 
@@ -28,6 +32,11 @@ namespace Business.DependencyResolvers
                 .AsClosedTypesOf(typeof(IRequestHandler<,>));
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()
                 .AsClosedTypesOf(typeof(IValidator<>));
+            builder.RegisterType<RabbitMqProducer>().As<IRabbitMqProducer>().SingleInstance();
+            builder.Register(context => BusConfigurator.Bus)
+                .SingleInstance()
+                .As<IBusControl>()
+                .As<IBus>();
             builder
                 .RegisterType<Mediator>()
                 .As<IMediator>()

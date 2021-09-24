@@ -6,8 +6,10 @@ using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.Features.Products.Queries;
 using Business.Helpers;
+using Core.Aspects.Autofac.Exception;
 using Core.Aspects.Autofac.Logger;
 using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using Core.Utilities.MessageBrokers.RabbitMq;
 using Core.Utilities.Results;
 using Core.Utilities.Uri;
 using DataAccess.Abstract;
@@ -25,28 +27,35 @@ namespace Business.Features.Products.Handlers.Queries
         private readonly IProductRepository _productRepository;
         private readonly IUriService _uriService;
         private readonly IMapper _mapper;
+        private readonly IRabbitMqProducer _producer;
 
-        public GetAllProductsQueryHandler(IProductRepository productRepository, IUriService uriService, IMapper mapper)
+        public GetAllProductsQueryHandler(IProductRepository productRepository, IUriService uriService, IMapper mapper, IRabbitMqProducer producer)
         {
             _productRepository = productRepository;
             _uriService = uriService;
             _mapper = mapper;
+            _producer = producer;
         }
 
         [LogAspect(typeof(FileLogger))]
-        [SecuredOperation(Roles.Admin,Roles.Moderator,Roles.User)]
+        [ExceptionLogAspect(typeof(FileLogger))]
+     //   [SecuredOperation(Roles.Admin,Roles.Moderator,Roles.User)]
         public async Task<IDataResult<IEnumerable<ProductDto>>> Handle(GetAllProductsQuery request,
             CancellationToken cancellationToken)
         {
             var result = await _productRepository.GetListAsync();
-            if (result == null)
+            if (result is null)
             {
                 return new ErrorDataResult<IEnumerable<ProductDto>>(Messages.DataNotFound);
             }
             
             var resultMapped = _mapper.Map<List<ProductDto>>(result);
-            var totalRecord = await _productRepository.GetCountAsync();
-            return PaginationHelper.CreatePaginatedResponse(resultMapped, request.PaginationFilter, totalRecord, _uriService, request.Route);
+            await _producer.Publish(new ProducerModel
+            {
+                Model = resultMapped[0],
+                QueueName = "product-listed"
+            });
+            return PaginationHelper.CreatePaginatedResponse(resultMapped, request.PaginationFilter, result.Count, _uriService, request.Route);
         }
     }
 }
